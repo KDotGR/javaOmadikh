@@ -1,19 +1,13 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+     Ονοματεπώνυμο                  ΑΜ
+    Δημήτρης Καραγεώργος        321/2017071
+    Αναστάσιος Κουτσώνης        321/2018106
  */
 
-/**
- *
- * @author dimit
- */
 public class Main {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
     
+    public static void main(String[] args) {
+        
+        new MyFrame();
+    }  
 }
