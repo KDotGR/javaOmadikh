@@ -4,17 +4,29 @@
     Αναστάσιος Κουτσώνης        321/2018106
  */
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//Εισαγωγή των απαραίτητων πακέτων
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.*;
+import javax.swing.JMenuItem;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.BorderFactory;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.border.Border;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.Dimension;
  
 public class MyFrame extends JFrame {
     
+    //Όλα τα στοιχεία που απαρτίζουν το γραφικό σώμα της εφαρμογής
     JMenuBar menuBar;
     
     JMenu menu;
@@ -30,11 +42,128 @@ public class MyFrame extends JFrame {
     JMenuItem help;
     JMenuItem about;
     
+    JPanel infoPanel;
+    JPanel mainCenterPanel;
+    JPanel selectionandProgressPanel;
+    JPanel gamePanel;
+    JPanel selectionsPanel;
+    JPanel progressPanel;
+    JPanel messagePanel;
+    
+    JLabel wins;
+    JLabel losses;
+    JLabel streak;
+    
     MyFrame(){
+        
+        this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής -- work in progress
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       
+        this.setSize(800,800);
+        
+        //Προσθήκη του logo της εφαρμογής
+        ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
+        this.setIconImage(image.getImage());
+        this.setLayout(new BorderLayout(10,10));
+        
+        Border br = BorderFactory.createLineBorder(Color.black);
+        //Container c=getContentPane();
+
+        
+        //Δημιουργία των Panel
+        infoPanel= new JPanel();
+        mainCenterPanel = new JPanel();
+        gamePanel = new JPanel();
+        selectionandProgressPanel = new JPanel();
+        selectionsPanel= new JPanel();
+        progressPanel = new JPanel();
+        messagePanel = new JPanel();
+        
+        //Ορισμούς του layout κάθε panel
+        mainCenterPanel.setLayout(new GridLayout(1,2));
+        selectionandProgressPanel.setLayout(new GridLayout(2,1));
+        gamePanel.setLayout(new BorderLayout());
+        infoPanel.setLayout(new BorderLayout());
+        selectionsPanel.setLayout(new BorderLayout());
+        progressPanel.setLayout(new BorderLayout());
+        messagePanel.setLayout(new BorderLayout());
+        
+        //Προσωρινή προσθήκη label στα panel για να αναγνωρίζουμε την λειτουργία
+        //τους
+        JLabel label=new JLabel("Info");
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setVerticalAlignment(JLabel.CENTER);
+        JLabel label2=new JLabel("GAME");
+        label2.setHorizontalAlignment(JLabel.CENTER);
+        label2.setVerticalAlignment(JLabel.CENTER);
+        JLabel label3=new JLabel("SELECTIONS");
+        label3.setHorizontalAlignment(JLabel.CENTER);
+        label3.setVerticalAlignment(JLabel.CENTER);
+        JLabel label4=new JLabel("PROGRESS");
+        label4.setHorizontalAlignment(JLabel.CENTER);
+        label4.setVerticalAlignment(JLabel.CENTER);
+        JLabel label5=new JLabel("MESSAGES");
+        label5.setHorizontalAlignment(JLabel.CENTER);
+        label5.setVerticalAlignment(JLabel.CENTER);
+        
+        //Προσωρινή προσθήκη διακριτικών label στα panel
+        infoPanel.add(label);
+        gamePanel.add(label2);
+        selectionsPanel.add(label3);
+        progressPanel.add(label4);
+        messagePanel.add(label5);
+        
+         // Ορισμός χρώματος και μεγέθους στα panel για διακριτικούς λόγους
+
+        //info Panel
+        infoPanel.setBackground(Color.yellow);
+        infoPanel.setPreferredSize(new Dimension(100,40));
+        
+        //mainCenterPanel Panel ( Υπερ panel των game Panel και selectionandProgress Panel )
+        mainCenterPanel.setPreferredSize(new Dimension(100,40));
+        
+        //message Panel
+        messagePanel.setBackground(Color.MAGENTA);
+        messagePanel.setPreferredSize(new Dimension(100,40));
+
+        //Game Panel
+        gamePanel.setBackground(Color.red);
+        gamePanel.setPreferredSize(new Dimension(600,40));
+        
+        //selectionandProgress Panel ( Υπερ panel των selection panel και progress panel )
+        selectionandProgressPanel.setPreferredSize(new Dimension(600,40));
+        
+        //Selection Panel
+        selectionsPanel.setBackground(Color.green);
+        selectionsPanel.setPreferredSize(new Dimension(100,40));
+        
+        //Progress Panel
+        progressPanel.setBackground(Color.cyan);
+        progressPanel.setPreferredSize(new Dimension(100,40));
+        
+        
+       /* // Panel border
+        infoPanel.setBorder(br);
+        gamePanel.setBorder(br);
+        selectionsPanel.setBorder(br);
+        progressPanel.setBorder(br);
+        */
+       
+        //Εισαγωγή των βασικών πάνελ στο JFrame
+        this.add(infoPanel,BorderLayout.NORTH);
+        this.add(mainCenterPanel);
+        this.add(messagePanel,BorderLayout.SOUTH);
+        
+        //Εισαγωγή των υπο πάνελ στο master panel τους
+        mainCenterPanel.add(gamePanel);
+        mainCenterPanel.add(selectionandProgressPanel);
+        selectionandProgressPanel.add(selectionsPanel);
+        selectionandProgressPanel.add(progressPanel);
         
         //Δημιουργία του Menu Bar
         menuBar = new JMenuBar();
         
+  
         //Δημιουργία του Μενού
         menu = new JMenu("Μενού");
         ImageIcon settingsImage = new ImageIcon("images/menu.png"); //via https://www.flaticon.com/authors/mayor-icons
@@ -66,9 +195,6 @@ public class MyFrame extends JFrame {
         
         //Προσθήκη του Μενού στο menu bar
         menuBar.add(menu);
-        this.setJMenuBar(menuBar); 
-        
-        
         
         //Δημιουργία του Μενού Εργαλεία
         tools = new JMenu("Εργαλεία");
@@ -83,16 +209,8 @@ public class MyFrame extends JFrame {
         
         menuBar.add(tools);
         this.setJMenuBar(menuBar);
-   
-        this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής -- work in progress
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(null);
-        this.setSize(800,800);
+  
+        //this.pack();
         this.setVisible(true);
-        
-        //Προσθήκη του logo της εφαρμογής
-        ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
-        this.setIconImage(image.getImage());
-       
     }
 }
