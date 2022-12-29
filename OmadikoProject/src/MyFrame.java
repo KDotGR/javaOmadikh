@@ -1,5 +1,5 @@
 /*
-      Ονοματεπώνυμο                  ΑΜ
+       Ονοματεπώνυμο                  ΑΜ
     Δημήτρης Καραγεώργος        321/2017071
     Αναστάσιος Κουτσώνης        321/2018106
  */
@@ -27,32 +27,16 @@ import java.awt.Dimension;
 public class MyFrame extends JFrame {
     
     //Όλα τα στοιχεία που απαρτίζουν το γραφικό σώμα της εφαρμογής
-    JMenuBar menuBar;
+    private final JMenuBar menuBar;
+    private final JMenu menu,tools;
+    private final JMenuItem newGame, endGame, changeProfile, settings, 
+            searchWordFile, exit;
     
-    JMenu menu;
-    JMenu tools;
+    private final JMenuItem help,about;
+    private final JPanel infoPanel, mainCenterPanel, selectionandProgressPanel,
+            gamePanel, selectionsPanel, progressPanel, messagePanel;
     
-    JMenuItem newGame;
-    JMenuItem endGame;
-    JMenuItem changeProfile;
-    JMenuItem settings;
-    JMenuItem searchWordFile;
-    JMenuItem exit;
-    
-    JMenuItem help;
-    JMenuItem about;
-    
-    JPanel infoPanel;
-    JPanel mainCenterPanel;
-    JPanel selectionandProgressPanel;
-    JPanel gamePanel;
-    JPanel selectionsPanel;
-    JPanel progressPanel;
-    JPanel messagePanel;
-    
-    JLabel wins;
-    JLabel losses;
-    JLabel streak;
+    private JLabel wins,losses,streak;
     
     MyFrame(){
         
@@ -60,11 +44,11 @@ public class MyFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
         this.setSize(800,800);
+        this.setLayout(new BorderLayout(10,10));
         
         //Προσθήκη του logo της εφαρμογής
         ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
         this.setIconImage(image.getImage());
-        this.setLayout(new BorderLayout(10,10));
         
         Border br = BorderFactory.createLineBorder(Color.black);
         //Container c=getContentPane();
