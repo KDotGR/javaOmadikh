@@ -36,9 +36,9 @@ public class MyFrame extends JFrame {
     private final JPanel infoPanel, mainCenterPanel, selectionandProgressPanel,
             gamePanel, selectionsPanel, progressPanel, messagePanel;
     
-    private JLabel wins,losses,streak;
+    private JLabel infoLabel;
     
-    MyFrame(){
+    MyFrame(Profile profile){
         
         this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής -- work in progress
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,10 +50,8 @@ public class MyFrame extends JFrame {
         ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
         this.setIconImage(image.getImage());
         
-        Border br = BorderFactory.createLineBorder(Color.black);
-        //Container c=getContentPane();
-
-        
+       // Border br = BorderFactory.createLineBorder(Color.black);
+   
         //Δημιουργία των Panel
         infoPanel= new JPanel();
         mainCenterPanel = new JPanel();
@@ -74,9 +72,10 @@ public class MyFrame extends JFrame {
         
         //Προσωρινή προσθήκη label στα panel για να αναγνωρίζουμε την λειτουργία
         //τους
-        JLabel label=new JLabel("Info");
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label.setVerticalAlignment(JLabel.CENTER);
+        infoLabel=new JLabel("Νίκες: "+profile.showWins()+"  Ήττες: "+profile.showLosses()
+            +"  Σερί: "+profile.showStreak());
+        infoLabel.setHorizontalAlignment(JLabel.CENTER);
+        infoLabel.setVerticalAlignment(JLabel.CENTER);
         JLabel label2=new JLabel("GAME");
         label2.setHorizontalAlignment(JLabel.CENTER);
         label2.setVerticalAlignment(JLabel.CENTER);
@@ -91,7 +90,7 @@ public class MyFrame extends JFrame {
         label5.setVerticalAlignment(JLabel.CENTER);
         
         //Προσωρινή προσθήκη διακριτικών label στα panel
-        infoPanel.add(label);
+        infoPanel.add(infoLabel);
         gamePanel.add(label2);
         selectionsPanel.add(label3);
         progressPanel.add(label4);

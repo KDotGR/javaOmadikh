@@ -18,13 +18,16 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 
 public class ProfileChooser extends JFrame implements ActionListener{
     
     CardLayout card;
-    private String username1;
     private final JButton newProfileButton;
     
     private final JFrame frame = new JFrame ();
@@ -92,6 +95,19 @@ public class ProfileChooser extends JFrame implements ActionListener{
         //Προσαρμογή του textField ----- θα εμφανίζεται μόνο σε περίπτωση
         //που πατηθεί το κουμπί "Νέο Προφίλ"
         username = new JTextField("Όνομα");
+        username.addActionListener((ActionEvent e) -> {
+            new MyFrame(new Profile(username.getText()));
+            frame.dispose();
+        });
+        
+        username.addFocusListener(new FocusListener(){
+            
+            public void focusGained(FocusEvent e){
+                username.setText("");
+            }
+            public void focusLost(FocusEvent e) {
+            }
+        });
         rowPanel3 = new JPanel();
         rowPanel3.setLayout(new FlowLayout());
         

@@ -24,10 +24,6 @@ public class Main {
         
         //δημιουργία του JFrame
         new ProfileChooser();
-        new MyFrame();
-        
-        
     }  
-    
-    
+     
 }
