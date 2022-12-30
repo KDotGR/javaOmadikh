@@ -7,6 +7,10 @@
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
+import java.io.FileReader;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Scanner;
 
 public class Main {
     
@@ -20,7 +24,8 @@ public class Main {
         clip.open(audioStream);
         clip.start();
         
-        
+        HashSet<String> wordSet = new HashSet<String>();
+        Scanner scanner = new Scanner(System.in);
         
         //δημιουργία του JFrame
         new ProfileChooser();
