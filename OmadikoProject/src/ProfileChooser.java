@@ -102,9 +102,11 @@ public class ProfileChooser extends JFrame implements ActionListener{
         
         username.addFocusListener(new FocusListener(){
             
+            @Override
             public void focusGained(FocusEvent e){
                 username.setText("");
             }
+            @Override
             public void focusLost(FocusEvent e) {
             }
         });
