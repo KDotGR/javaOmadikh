@@ -95,9 +95,12 @@ public class ProfileChooser extends JFrame implements ActionListener{
         //Προσαρμογή του textField ----- θα εμφανίζεται μόνο σε περίπτωση
         //που πατηθεί το κουμπί "Νέο Προφίλ"
         username = new JTextField("Όνομα");
-        username.addActionListener((ActionEvent e) -> {
-            new MyFrame(new Profile(username.getText()));
-            frame.dispose();
+        username.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Play(new Profile(username.getText()),1);             
+                frame.dispose();
+            }
         });
         
         username.addFocusListener(new FocusListener(){

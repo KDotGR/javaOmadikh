@@ -24,7 +24,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Dimension;
  
-public class MyFrame extends JFrame {
+public class Play extends JFrame {
     
     //Όλα τα στοιχεία που απαρτίζουν το γραφικό σώμα της εφαρμογής
     private final JMenuBar menuBar;
@@ -38,7 +38,12 @@ public class MyFrame extends JFrame {
     
     private JLabel infoLabel;
     
-    MyFrame(Profile profile){
+    private final int gameRows = 8;
+    private final int gameCols = 8;
+    private final int NUM = gameRows * gameCols;
+    private JPanel[] charPanels = new JPanel[NUM];
+    
+    Play(Profile profile,int StartGame){
         
         this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής -- work in progress
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,8 +54,6 @@ public class MyFrame extends JFrame {
         //Προσθήκη του logo της εφαρμογής
         ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
         this.setIconImage(image.getImage());
-        
-       // Border br = BorderFactory.createLineBorder(Color.black);
    
         //Δημιουργία των Panel
         infoPanel= new JPanel();
@@ -64,7 +67,7 @@ public class MyFrame extends JFrame {
         //Ορισμούς του layout κάθε panel
         mainCenterPanel.setLayout(new GridLayout(1,2));
         selectionandProgressPanel.setLayout(new GridLayout(2,1));
-        gamePanel.setLayout(new BorderLayout());
+        gamePanel.setLayout(new GridLayout(gameRows,gameCols,6,6));
         infoPanel.setLayout(new BorderLayout());
         selectionsPanel.setLayout(new BorderLayout());
         progressPanel.setLayout(new BorderLayout());
@@ -91,7 +94,7 @@ public class MyFrame extends JFrame {
         
         //Προσωρινή προσθήκη διακριτικών label στα panel
         infoPanel.add(infoLabel);
-        gamePanel.add(label2);
+       // gamePanel.add(label2);
         selectionsPanel.add(label3);
         progressPanel.add(label4);
         messagePanel.add(label5);
@@ -110,7 +113,7 @@ public class MyFrame extends JFrame {
         messagePanel.setPreferredSize(new Dimension(100,40));
 
         //Game Panel
-        gamePanel.setBackground(Color.red);
+        //gamePanel.setBackground(Color.red);
         gamePanel.setPreferredSize(new Dimension(600,40));
         
         //selectionandProgress Panel ( Υπερ panel των selection panel και progress panel )
@@ -131,6 +134,7 @@ public class MyFrame extends JFrame {
         selectionsPanel.setBorder(br);
         progressPanel.setBorder(br);
         */
+      
        
         //Εισαγωγή των βασικών πάνελ στο JFrame
         this.add(infoPanel,BorderLayout.NORTH);
@@ -195,5 +199,27 @@ public class MyFrame extends JFrame {
   
         //this.pack();
         this.setVisible(true);
+        
+        if(StartGame==1){
+            NewGame();
+        }
+    }
+    
+    public void NewGame(){
+        
+         Border br = BorderFactory.createLineBorder(Color.black);
+         
+        for(int i=0; i < NUM; i++){
+            
+            charPanels[i] = new JPanel();
+            charPanels[i].setBorder(br);
+            /*
+            
+                -------- Εισαγωγή κώδικα για χαρακτήρες ------------
+            
+            */
+            gamePanel.add(charPanels[i]);
+        }
+        
     }
 }

@@ -31,8 +31,4 @@ public class Lexicon {
             e.printStackTrace();
         }
     }
-    
-    /*private int ReturnWordPoints(String word){
-        
-    }*/
 }

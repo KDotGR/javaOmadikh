@@ -2,14 +2,14 @@
         Ονοματεπώνυμο                  ΑΜ
     Δημήτρης Καραγεώργος        321/2017071
     Αναστάσιος Κουτσώνης        321/2018106
- */
+*/
 
-public class Word {
-    //private int points;
-    private String word;
+public class Letter {
+    private int points;
+    private char letter;
     
-    Word(String word){
-        this.word = word;
-        //points = 0;
-        }
+    Letter(char letter, int points){
+        this.letter=letter;
+        this.points=points;
     }
+}
