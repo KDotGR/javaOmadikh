@@ -23,8 +23,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Dimension;
+import java.util.Random;
  
 public class Play extends JFrame {
+    
+    Letter[] letterArray;
+    //letterArray = new Letter[24];
+    
+    
+    
     
     //Όλα τα στοιχεία που απαρτίζουν το γραφικό σώμα της εφαρμογής
     private final JMenuBar menuBar;
@@ -45,11 +52,15 @@ public class Play extends JFrame {
     
     Play(Profile profile,int StartGame){
         
+        //Βασικά χαρακτηριστικά και λειτουργίες του Frame
         this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής -- work in progress
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
         this.setSize(800,800);
         this.setLayout(new BorderLayout(10,10));
+        
+        //Αρχικοποίηση του πίνακα γραμμάτων με τα γράμματα και τις τιμές τους
+        InitLetterArray();
         
         //Προσθήκη του logo της εφαρμογής
         ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
@@ -127,14 +138,6 @@ public class Play extends JFrame {
         progressPanel.setBackground(Color.cyan);
         progressPanel.setPreferredSize(new Dimension(100,40));
         
-        
-       /* // Panel border
-        infoPanel.setBorder(br);
-        gamePanel.setBorder(br);
-        selectionsPanel.setBorder(br);
-        progressPanel.setBorder(br);
-        */
-      
        
         //Εισαγωγή των βασικών πάνελ στο JFrame
         this.add(infoPanel,BorderLayout.NORTH);
@@ -213,6 +216,7 @@ public class Play extends JFrame {
             
             charPanels[i] = new JPanel();
             charPanels[i].setBorder(br);
+            
             /*
             
                 -------- Εισαγωγή κώδικα για χαρακτήρες ------------
@@ -221,5 +225,39 @@ public class Play extends JFrame {
             gamePanel.add(charPanels[i]);
         }
         
+    }
+    
+    protected void InitLetterArray(){
+        letterArray = new Letter[24];
+        //Πίνακας Γραμμάτων
+        letterArray[0] = new Letter('Α',1);
+        letterArray[1] = new Letter('Β',8);
+        letterArray[2] = new Letter('Γ',4);
+        letterArray[3] = new Letter('Δ',4);
+        letterArray[4] = new Letter('Ε',1);
+        letterArray[5] = new Letter('Ζ',8);
+        letterArray[6] = new Letter('Η',1);
+        letterArray[7] = new Letter('Θ',8);
+        letterArray[8] = new Letter('Ι',1);
+        letterArray[9] = new Letter('Κ',2);
+        letterArray[10] = new Letter('Λ',3);
+        letterArray[11] = new Letter('Μ',3);
+        letterArray[12] = new Letter('Ν',1);
+        letterArray[13] = new Letter('Ξ',10);
+        letterArray[14] = new Letter('Ο',1);
+        letterArray[15] = new Letter('Π',2);
+        letterArray[16] = new Letter('Ρ',2);
+        letterArray[17] = new Letter('Σ',1);
+        letterArray[18] = new Letter('Τ',1);
+        letterArray[19] = new Letter('Υ',2);
+        letterArray[20] = new Letter('Φ',8);
+        letterArray[21] = new Letter('Χ',10);
+        letterArray[22] = new Letter('Ψ',10);
+        letterArray[23] = new Letter('Ω',3);
+    }
+    
+    protected void RandomLetterChooser(){
+        Random rand = new Random();
+        int randNum = rand.nextInt(24);
     }
 }
