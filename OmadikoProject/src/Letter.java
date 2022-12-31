@@ -12,4 +12,8 @@ public class Letter {
         this.letter=letter;
         this.points=points;
     }
+    
+    public char ReturnLetter(){
+        return letter;
+    }
 }

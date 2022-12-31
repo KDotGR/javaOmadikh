@@ -28,6 +28,7 @@ import java.util.Random;
 public class Play extends JFrame {
     
     Letter[] letterArray;
+    int[] letterPool;
     //letterArray = new Letter[24];
     
     
@@ -216,18 +217,18 @@ public class Play extends JFrame {
             
             charPanels[i] = new JPanel();
             charPanels[i].setBorder(br);
+           
+            Character chr=RandomLetterChooser().ReturnLetter();
+            String str=Character.toString(chr);
             
-            /*
-            
-                -------- Εισαγωγή κώδικα για χαρακτήρες ------------
-            
-            */
+            charPanels[i].add(new JLabel(str));
             gamePanel.add(charPanels[i]);
         }
         
     }
     
     protected void InitLetterArray(){
+        
         letterArray = new Letter[24];
         //Πίνακας Γραμμάτων
         letterArray[0] = new Letter('Α',1);
@@ -256,8 +257,141 @@ public class Play extends JFrame {
         letterArray[23] = new Letter('Ω',3);
     }
     
-    protected void RandomLetterChooser(){
+    /*Επιστρέφει ένα τυχαίο γράμμα
+     
+     Η επιλογή του γράμματος γίνεται με τον εξης τρόπο αναλογικά με την πιθανότητα
+     ύπαρξης ενός γράμματος μέσα σε μια τυχαία λέξη :
+    
+     ---- Παράγεται ένας τυχαίος αριθμός από το 1-100. Επιστρέφεται η αντίστοιχη
+    λέξη σύμφωνα με το ακόλουθο πινακάκι:
+    
+    ΤΥΧΑΙΟΣ ΑΡΙΘΜΟΣ   ΕΠΙΣΤΡΕΦΟΜΕΝΗ ΤΙΜΗ
+         1-11       ->      Α  (11%)
+           12       ->      Β  (1%)
+           13       ->      Γ  (1%)
+        14-15       ->      Δ  (2%)
+        16-24       ->      Ε  (9%)
+           25       ->      Ζ  (1%)
+        26-30       ->      Η  (5%)
+           31       ->      Θ  (1%)
+        32-40       ->      Ι  (9%)
+        41-44       ->      Κ  (4%)
+        45-46       ->      Λ  (2%)
+        47-49       ->      Μ  (3%)
+        50-55       ->      Ν  (6%)
+           56       ->      Ξ  (1%)
+        57-67       ->      Ο  (10%)
+        68-71       ->      Π  (4%)
+        72-75       ->      Ρ  (4%)
+        76-83       ->      Σ  (8%)
+        84-91       ->      Τ  (8%)
+        92-95       ->      Υ  (4%)
+           96       ->      Φ  (1%)
+           97       ->      Χ  (1%)
+           98       ->      Ψ  (1%)
+        99-100      ->      Ω  (2%)
+        
+    */
+    protected Letter RandomLetterChooser(){
         Random rand = new Random();
-        int randNum = rand.nextInt(24);
+        int randNum = rand.nextInt(100)+1;
+        
+        // 1-11       ->      Α  (11%)
+        if(randNum<=11)
+            return letterArray[0];
+        
+        // 12       ->      Β  (1%)
+        else if(randNum==12)
+            return letterArray[1];
+        
+        // 13       ->      Γ  (1%)
+        else if(randNum==13)
+            return letterArray[2];
+        
+        // 14-15       ->      Δ  (2%)
+        else if(randNum==14 || randNum==15)
+            return letterArray[3];
+        
+        // 16-24       ->      Ε  (9%)
+        else if(randNum>=16 && randNum<=24)
+            return letterArray[4];
+        
+        // 25       ->      Ζ  (1%)
+        else if(randNum==25)
+            return letterArray[5];
+        
+        // 26-30       ->      Η  (5%)
+        else if(randNum>=26 && randNum<=30)
+            return letterArray[6];
+        
+        // 31       ->      Θ  (1%)
+        else if(randNum==31)
+            return letterArray[7];
+        
+        // 32-40       ->      Ι  (9%)
+        else if(randNum>=32 && randNum<=40)
+            return letterArray[8];
+        
+        // 41-44       ->      Κ  (4%)
+        else if(randNum>=41 && randNum<=44)
+            return letterArray[9];
+        
+        // 45-46       ->      Λ  (2%)
+        else if(randNum==45 || randNum==46)
+            return letterArray[10];
+        
+        // 47-49       ->      Μ  (3%)
+        else if(randNum>=47 && randNum<=49)
+            return letterArray[11];
+        
+        // 50-55       ->      Ν  (6%)
+        else if(randNum>=50 && randNum<=55)
+            return letterArray[12];
+        
+        // 56       ->      Ξ  (1%)
+        else if(randNum==56)
+            return letterArray[13];
+        
+        // 57-67       ->      Ο  (10%)
+        else if(randNum>=57 && randNum<=67)
+            return letterArray[14];
+        
+        // 68-71       ->      Π  (4%)
+        else if(randNum>=68 && randNum<=71)
+            return letterArray[15];
+        
+        // 72-75       ->      Ρ  (4%)
+        else if(randNum>=72 && randNum<=75)
+            return letterArray[16];
+        
+        // 76-83       ->      Σ  (8%)
+        else if(randNum>=76 && randNum<=83)
+            return letterArray[17];
+        
+        // 84-91       ->      Τ  (8%)
+        else if(randNum>=84 && randNum<=91)
+            return letterArray[18];
+        
+        // 92-95       ->      Υ  (4%)
+        else if(randNum>=92 && randNum<=95)
+            return letterArray[19];
+        
+        // 96       ->      Φ  (1%)
+        else if(randNum==96)
+            return letterArray[20];
+        
+        // 97       ->      Χ  (1%)
+        else if(randNum==97)
+            return letterArray[21];
+        
+        // 98       ->      Ψ  (1%)
+        else if(randNum==98)
+            return letterArray[22];
+        
+        //99-100      ->      Ω  (2%)
+        else if(randNum==99 || randNum==100)
+            return letterArray[23];
+        
+        return null;
     }
 }
