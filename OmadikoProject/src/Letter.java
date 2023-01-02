@@ -16,4 +16,8 @@ public class Letter {
     public char ReturnLetter(){
         return letter;
     }
+    
+    public int ReturnLetterPoints(){
+        return points;
+    }
 }

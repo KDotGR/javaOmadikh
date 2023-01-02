@@ -23,16 +23,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.Random;
  
 public class Play extends JFrame {
     
     Letter[] letterArray;
-    int[] letterPool;
-    //letterArray = new Letter[24];
-    
-    
-    
     
     //Όλα τα στοιχεία που απαρτίζουν το γραφικό σώμα της εφαρμογής
     private final JMenuBar menuBar;
@@ -50,12 +46,17 @@ public class Play extends JFrame {
     private final int gameCols = 8;
     private final int NUM = gameRows * gameCols;
     private JPanel[] charPanels = new JPanel[NUM];
+    private JLabel[] charLabels = new JLabel[NUM];
+    private JLabel[] pointLabels = new JLabel [NUM];
+    
+    //private LetterPanel[] letterPanels = new LetterPanel [NUM];
     
     Play(Profile profile,int StartGame){
         
         //Βασικά χαρακτηριστικά και λειτουργίες του Frame
         this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής -- work in progress
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH); //Ξεκινάει σε fullscreen
        
         this.setSize(800,800);
         this.setLayout(new BorderLayout(10,10));
@@ -211,17 +212,108 @@ public class Play extends JFrame {
     
     public void NewGame(){
         
+        //Διαμόρφωση πλαισίου πάνελ-γραμμάτων παιχνιδιού
          Border br = BorderFactory.createLineBorder(Color.black);
          
-        for(int i=0; i < NUM; i++){
+         //Τυχαία επιλογή αριθμού από μπαλαντέρ στο παιχνίδι
+         int[] placeOfWilds;
+         placeOfWilds = new int[returnRandom(0,4)];
+         
+         //Τυχαία επιλογή θέσης μπαλαντέρ
+         for(int i=0; i < placeOfWilds.length; i++)
+             placeOfWilds[i]=returnRandom(0,NUM-1);
+         
+         
+         //Τυχαία επιλογή αριθμού γραμμάτων με κόκκινο φόντο στο παιχνίδι
+         int[] placeOfRedLetters;
+         placeOfRedLetters = new int[returnRandom(0,2)];
+         
+         //Τυχαία επιλογή θέσης γραμμάτων με κόκκινο φόντο στο παιχνίδι
+         for(int i=0; i < placeOfRedLetters.length; i++ )
+             placeOfRedLetters[i] = returnRandom(0,NUM-1,placeOfWilds);
+         
+         //Tυχαία επιλογή αριθμού γραμμάτων με μπλε φόντο στο παιχνίδι
+         int[] placeOfBlueLetters;
+         placeOfBlueLetters = new int[returnRandom(0,3)];
+         
+         //Τυχαία επιλογή θέσης γραμμάτων με μπλε φόντο στο παιχνίδι
+         for(int i=0; i < placeOfBlueLetters.length; i++)
+             placeOfBlueLetters[i] = returnRandom(0,NUM-1,placeOfWilds,placeOfRedLetters);
+         
+         
+         // --------------------- Δημιουργία των Panel ------------------------
+         
+         int keeper = 0; //Αποθηκεύει αν το panel έχει ειδική κατάσταση ή όχι
+         
+         for(int i=0; i < NUM; i++){
             
             charPanels[i] = new JPanel();
-            charPanels[i].setBorder(br);
+            charPanels[i].setLayout(new GridLayout(1,4));
+            charPanels[i].setBorder(br); //Προσθήκη border στα κουμπιά-πανελ
            
-            Character chr=RandomLetterChooser().ReturnLetter();
-            String str=Character.toString(chr);
+            //Απόκτηση τυχαίου γράμματος
+            Letter chosenLetter = RandomLetterChooser();
             
-            charPanels[i].add(new JLabel(str));
+            keeper = 0;
+            
+            //Αν το panel έχει επιλεχθεί για μπαλαντέρ, κάνε το πάνελ μπαλαντέρ
+            for(int l=0; l < placeOfWilds.length; l++){
+                if(placeofWilds[l] == i){
+                    letterPanels[i] = new LetterPanel(i,chosenLetter.ReturnLetter(),chosenLetter.ReturnLetterPoints(),4);
+                    keeper = 1;
+                    break;
+                }       
+            }
+            
+            if(keeper=0){
+                //Αν το πάνελ έχει επιλεχθεί για κόκκινο, κάνε το πάνελ κόκκινο
+                for(int l=0; l< placeOfRedLetters.length; l++){
+                    if(placeOfRedLetters[l] == i){
+                        letterPanels[i] = new LetterPanel(i,chosenLetter.ReturnLetter(), chosenLetter.ReturnLetterPoints(),2);
+                        keeper = 1;
+                        break;
+                    }
+                }
+            }
+            
+            if(keeper = 0){
+                //Αν το πάνελ έχει επιλεχθεί για μπλε, κάνε το πάνελ μπλε
+                for(int l=0; l< placeOfBlueLetters.length; l++){
+                    if(placeOfBlueLetters[l] == i){
+                        letterPanels[i] = new LetterPanel(i,chosenLetter.ReturnLetter(), chosenLetter.ReturnLetterPoints(),3);
+                        
+                        keeper = 1;
+                        break;
+                    }
+                }
+            }
+            
+            if(keeper = 0){
+                //Αν το πάνελ δεν έχει επιλεχθεί για ειδική λειτουργία, κάντο άσπρο
+                letterPanels[i] = new LetterPanel(i,chosenLetter.ReturnLetter(), chosenLetter.ReturnLetterPoints(),1);
+                
+            }
+       
+            charLabels[i] = new JLabel(letterPanels[i].displayLetter);
+            charLabels[i].setFont(new Font("Serif",Font.PLAIN, 32));
+            charLabels[i].setHorizontalAlignment(JLabel.CENTER);
+            pointLabels[i] = new JLabel(letterPanels[i].displayPoints);
+            
+            if(letterPanels[i].returnType !=4){
+                pointLabels[i] = new JLabel(letterPanels[i].displayPoints);
+                pointLabels[i].setFont(new Font("Serif",Font.PLAIN, 14));
+            }
+            
+            charPanels[i].add(new JLabel());
+            charPanels[i].add(charLabels[i]);
+            charPanels[i].add(pointLabels[i]);
+            charPanels[i].add(new JLabel());
+            
+            if(letterPanels[i].returnType == 2)
+                charPanels[i].setBackground(Color.red);
+            else if(letterPanels[i].returnType == 3)
+                charPanels[i].setBackground(Color.BLUE);
+            
             gamePanel.add(charPanels[i]);
         }
         
@@ -294,7 +386,8 @@ public class Play extends JFrame {
     */
     protected Letter RandomLetterChooser(){
         Random rand = new Random();
-        int randNum = rand.nextInt(100)+1;
+        int randNum = returnRandom(1,100);
+        System.out.println(randNum);
         
         // 1-11       ->      Α  (11%)
         if(randNum<=11)
@@ -393,5 +486,58 @@ public class Play extends JFrame {
             return letterArray[23];
         
         return null;
+    }
+    
+    //Επιστρέφει τυχαίο αριθμό από min έως max
+    protected int returnRandom(int min, int max){
+        Random rand = new Random();
+        return rand.nextInt(max)+min;
+    }
+    
+    // -------------------- Overload στην returnRandom --------------------
+    //Επιστρέφει τυχαίο αριθμό από min έως max εκτός από τους αριθμούς που
+    //περιέχονται στον πίνακα exception
+    protected int returnRandom(int min, int max, int[] exception){
+        Random rand = new Random();
+        int keeper = 1;
+        while(keeper = 1){
+            keeper = 0;
+            randNum = rand.nextInt(max)+min;
+            //Αν ο τυχαίος αριθμός randNum περιλαμβάνεται στον exception μένει 
+            //στην while
+            for(int i=0; i < exception.length; i++){
+                if(RandNum == exception[i])
+                    keeper = 1;
+            }
+        }
+        
+        return randNum;
+    }
+    
+    // -------------------- Overload στην returnRandom --------------------
+    //Επιστρέφει τυχαίο αριθμό από min έως max εκτός από τους αριθμούς που
+    //περιέχονται στους πίνακες exception
+    protected int returnRandom(int min, int max, int[] exception1, int[] exception2){
+        Random rand = new Random();
+        int keeper = 1;
+        
+        while(keeper = 1){
+            keeper = 0;
+            randNum = rand.nextInt(max)+min;
+            //Αν ο τυχαίος αριθμός randNum περιλαμβάνεται στον exception1 
+            //μένει στην while
+            for(int i=0; i < exception1.length; i++){
+                if(RandNum == exception1[i])
+                    keeper = 1;
+            }
+            //Αν ο τυχαίος αριθμός randNum περιλαμβάνεται στον exception2 
+            //μένει στην while
+            for(int i=0; i < exception2.length; i++){
+                if(RandNum == exception2[i])
+                    keeper = 1;
+            }
+        }
+        
+        return randNum;
     }
 }

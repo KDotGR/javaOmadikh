@@ -25,6 +25,7 @@ public class Main {
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(music1);
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
         clip.start();
         
         //δημιουργία του JFrame
