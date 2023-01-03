@@ -21,10 +21,12 @@ public class Main {
         
         
         //Μουσική εκκίνησης
-        File music1 = new File("sounds/music/ladyOfThe80s.wav"); //
+        File music1 = new File("sounds/music/modernRnbCuriosity.wav"); // Sound Effect from Pixabay 
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(music1);
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(-15.0f); // Reduce volume by 10 decibels.
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         clip.start();
         

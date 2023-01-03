@@ -25,8 +25,9 @@ import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Random;
+import javax.swing.JOptionPane;
  
-public class Play extends JFrame {
+public final class Play extends JFrame {
     
     Letter[] letterArray;
     
@@ -148,6 +149,7 @@ public class Play extends JFrame {
         
         //Εισαγωγή των υπο πάνελ στο master panel τους
         mainCenterPanel.add(gamePanel);
+        mainCenterPanel.setBackground(Color.GRAY);
         mainCenterPanel.add(selectionandProgressPanel);
         selectionandProgressPanel.add(selectionsPanel);
         selectionandProgressPanel.add(progressPanel);
@@ -201,7 +203,8 @@ public class Play extends JFrame {
         
         menuBar.add(tools);
         this.setJMenuBar(menuBar);
-  
+        
+        this.setBackground(Color.GRAY);
         //this.pack();
         this.setVisible(true);
         
@@ -210,7 +213,7 @@ public class Play extends JFrame {
         }
     }
     
-    public void NewGame(){
+    protected void NewGame(){
         
         //Διαμόρφωση πλαισίου πάνελ-γραμμάτων παιχνιδιού
          Border br = BorderFactory.createLineBorder(Color.black);
@@ -244,7 +247,7 @@ public class Play extends JFrame {
          
          // --------------------- Δημιουργία των Panel ------------------------
          
-         int keeper1 = 0; //Αποθηκεύει αν το panel έχει ειδική κατάσταση ή όχι
+         int keeper1; //Αποθηκεύει αν το panel έχει ειδική κατάσταση ή όχι
          
          for(int i=0; i < NUM; i++){
             
@@ -312,16 +315,36 @@ public class Play extends JFrame {
             else
                 charPanels[i].add(charLabels[i]);
  
-            if(letterPanels[i].returnType() == 2)
-                charPanels[i].setBackground(Color.red);
-            else if(letterPanels[i].returnType() == 3)
-                charPanels[i].setBackground(Color.CYAN);
-            else if(letterPanels[i].returnType() == 4)
-                charPanels[i].setBackground(Color.MAGENTA);
+             switch (letterPanels[i].returnType()) {
+                 case 2 -> charPanels[i].setBackground(Color.red);
+                 case 3 -> charPanels[i].setBackground(Color.CYAN);
+                 case 4 -> charPanels[i].setBackground(Color.MAGENTA);
+                 default -> { charPanels[i].setBackground(Color.WHITE);
+                 }
+             }
             
+            
+             charPanels[i].addMouseListener(new LetterPanelListener(letterPanels[i])); // add a mouse listener to make the panels clickable
             gamePanel.add(charPanels[i]);
+            
         }
+        gamePanel.setBackground(Color.GRAY);
+    }
+    
+    protected static void ResetPanels(){
         
+    }
+    
+    protected static void WildLetterChooser(){
+        //letterArray[1];
+       
+        String[] options = {"Α", "Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν",
+            "Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"};
+        int n = JOptionPane.showOptionDialog(null,
+                "Διάλεξε το γράμμα που θα αντικαταστήσει τον μπαλαντέρ",
+                "Μπαλαντέρ",JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE, new ImageIcon("images/joker.png"), options , null); // via https://www.flaticon.com/authors/smashicons
+
     }
     
     protected void InitLetterArray(){
@@ -390,9 +413,8 @@ public class Play extends JFrame {
         
     */
     protected Letter RandomLetterChooser(){
-        Random rand = new Random();
+     
         int randNum = returnRandom(1,100);
-        System.out.println(randNum);
         
         // 1-11       ->      Α  (11%)
         if(randNum<=11)
