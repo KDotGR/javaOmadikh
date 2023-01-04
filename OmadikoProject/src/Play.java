@@ -21,15 +21,16 @@ import java.awt.event.ActionListener;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Random;
 import javax.swing.JOptionPane;
  
-public final class Play extends JFrame {
+public final class Play extends JFrame{
     
-    Letter[] letterArray;
+    static Letter[] letterArray;
     
     //Όλα τα στοιχεία που απαρτίζουν το γραφικό σώμα της εφαρμογής
     private final JMenuBar menuBar;
@@ -41,16 +42,16 @@ public final class Play extends JFrame {
     private final JPanel infoPanel, mainCenterPanel, selectionandProgressPanel,
             gamePanel, selectionsPanel, progressPanel, messagePanel;
     
-    private JLabel infoLabel;
+    private final JLabel infoLabel;
     
-    private final int gameRows = 8;
-    private final int gameCols = 8;
-    private final int NUM = gameRows * gameCols;
-    private JPanel[] charPanels = new JPanel[NUM];
-    private JLabel[] charLabels = new JLabel[NUM];
-    private JLabel[] pointLabels = new JLabel [NUM];
+    private static final int gameRows = 8;
+    private static final int gameCols = 8;
+    private static final int NUM = gameRows * gameCols;
+    private static final JPanel[] charPanels = new JPanel[NUM];
+    private static final JLabel[] charLabels = new JLabel[NUM];
+    private static final JLabel[] pointLabels = new JLabel [NUM];
     
-    private LetterPanel[] letterPanels = new LetterPanel [NUM];
+    private static final LetterPanel[] letterPanels = new LetterPanel [NUM];
     
     Play(Profile profile,int StartGame){
         
@@ -314,7 +315,8 @@ public final class Play extends JFrame {
             }
             else
                 charPanels[i].add(charLabels[i]);
- 
+            
+            //Χρωματίζει τα panel ανάλογα την λειτουργία τους 
              switch (letterPanels[i].returnType()) {
                  case 2 -> charPanels[i].setBackground(Color.red);
                  case 3 -> charPanels[i].setBackground(Color.CYAN);
@@ -323,30 +325,72 @@ public final class Play extends JFrame {
                  }
              }
             
-            
-             charPanels[i].addMouseListener(new LetterPanelListener(letterPanels[i])); // add a mouse listener to make the panels clickable
+            //Κάνει τα panel clickable
+            charPanels[i].addMouseListener(new LetterPanelListener(letterPanels[i]));
             gamePanel.add(charPanels[i]);
             
         }
         gamePanel.setBackground(Color.GRAY);
     }
     
+    //Κάνει reset τα Panels στο σωστό τους χρώμα ( για χρήση μετά από λάθος επιλογή )
     protected static void ResetPanels(){
         
+        for(int i=0; i < NUM; i++){
+            charLabels[i].setText(letterPanels[i].displayLetter());
+            pointLabels[i].setText(letterPanels[i].displayPoints());
+            switch (letterPanels[i].returnType()) {
+                 case 2 -> charPanels[i].setBackground(Color.red);
+                 case 3 -> charPanels[i].setBackground(Color.CYAN);
+                 case 4 -> charPanels[i].setBackground(Color.MAGENTA);
+                 default -> { charPanels[i].setBackground(Color.WHITE);
+                 }
+            }
+        }
     }
     
-    protected static void WildLetterChooser(){
-        //letterArray[1];
+    //Κάνει reset τα Panels στο σωστό τους χρώμα μετά από αλλαγή μπαλαντέρ
+    protected static void ResetPanels(int exWild){
+        
+        for(int i=0; i < NUM; i++){
+            charLabels[i].setText(letterPanels[i].displayLetter());
+            pointLabels[i].setText(letterPanels[i].displayPoints());
+            
+            //Δημιουργία των Label που δεν υπήρχαν προηγουμένως στο panel
+            //επειδή ήταν Μπαλαντέρ
+            if(i==exWild){
+                charPanels[i].remove(charLabels[i]);
+                 pointLabels[i] = new JLabel(letterPanels[i].displayPoints());
+                pointLabels[i].setFont(new Font("Serif",Font.PLAIN, 14));
+                
+                charPanels[i].add(new JLabel());
+                charPanels[i].add(charLabels[i]);
+                charPanels[i].add(pointLabels[i]);
+                charPanels[i].add(new JLabel());
+            }
+            switch (letterPanels[i].returnType()) {
+                 case 2 -> charPanels[i].setBackground(Color.red);
+                 case 3 -> charPanels[i].setBackground(Color.CYAN);
+                 case 4 -> charPanels[i].setBackground(Color.MAGENTA);
+                 default -> { charPanels[i].setBackground(Color.WHITE);
+                 }
+            }
+        }
+    }
+    
+    //JOptionPane για επιλογή γράμματος από μπαλαντέρ
+    protected static int WildLetterChooser(){
        
         String[] options = {"Α", "Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν",
             "Ξ","Ο","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"};
-        int n = JOptionPane.showOptionDialog(null,
+        return JOptionPane.showOptionDialog(null,
                 "Διάλεξε το γράμμα που θα αντικαταστήσει τον μπαλαντέρ",
                 "Μπαλαντέρ",JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE, new ImageIcon("images/joker.png"), options , null); // via https://www.flaticon.com/authors/smashicons
 
     }
     
+    //Αρχικοποιεί τον πίνακα γραμμάτων με αντικείμενα γραμμάτων
     protected void InitLetterArray(){
         
         letterArray = new Letter[24];
@@ -567,5 +611,11 @@ public final class Play extends JFrame {
         }
         
         return randNum;
+    }
+    
+    //Επιστρέφει ένα συγκεκριμένο αντικείμενο από τον πίνακα γραμμάτων 
+    // --getter για χρήση από την κλάση LetterPanelListener
+    protected static Letter ReturnLetterArray(int n){
+        return letterArray[n];
     }
 }

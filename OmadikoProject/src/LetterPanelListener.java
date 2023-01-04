@@ -25,17 +25,20 @@ import javax.swing.JPanel;
             this.letterPanel = letterPanel;
         }
         
+        @Override
     	public void mouseClicked(MouseEvent me)
     	{
-              JPanel clickedBox =(JPanel)me.getSource(); // get the reference to the box that was clicked 
+              //Αναφορά στο panel που κλικαρίστηκε
+              JPanel clickedBox =(JPanel)me.getSource();
               System.out.println("beep boop");
                 try {
                     SoundEffects.clickSound();
                     if(letterPanel.returnType()!=4)
                         clickedBox.setBackground(Color.YELLOW);
                     else{
-                        Play.WildLetterChooser();
-                        Play.ResetPanels();
+                        int option =Play.WildLetterChooser();
+                        letterPanel.changeTypeofWild(Play.ReturnLetterArray(option).ReturnLetter(), option);
+                        Play.ResetPanels(letterPanel.position);
                     }
                         
                     

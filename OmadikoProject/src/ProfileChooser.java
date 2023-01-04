@@ -98,7 +98,7 @@ public class ProfileChooser extends JFrame implements ActionListener{
         username.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Play(new Profile(username.getText()),1);             
+                Play a = new Play(new Profile(username.getText()),1);             
                 frame.dispose();
             }
         });

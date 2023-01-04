@@ -9,12 +9,12 @@ public class LetterPanel {
     protected char letter;
     protected int points;
     protected int type; // 1 = Άσπρο, 2 = Κόκκινο, 3 = Μπλε, 4 = Μπαλαντέρ
-    
+    protected boolean clicked; // 0 Όχι, 1 Ναι
     //constructor για αρχικοποίηση των αντικειμένων
     LetterPanel(int position, char letter, int points, int type){
         
         this.position = position;
-        
+        clicked = false;
         if(type == 1 || type == 2 || type == 3)
             this.letter = letter;
         
@@ -40,6 +40,7 @@ public class LetterPanel {
         type = 1;
     }
     
+    
     public String displayLetter(){
         String ltr = Character.toString(letter);
         return ltr;
@@ -52,5 +53,15 @@ public class LetterPanel {
     
     public int returnType(){
         return type;
+    }
+    
+    public boolean returnClicked(){
+        return clicked;
+    }
+    
+    public void changeTypeofWild(char letter, int points){
+        type = 1;
+        this.letter = letter;
+        this.points = points;
     }
 }
