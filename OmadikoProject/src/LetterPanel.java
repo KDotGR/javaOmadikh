@@ -68,12 +68,6 @@ public class LetterPanel {
         return position;
     }
     
-    public void changeTypeofWild(char letter, int points){
-        type = 1;
-        this.letter = letter;
-        this.points = points;
-    }
-    
     protected static void changePrevButton(int n){
         prevButton = n;
     }

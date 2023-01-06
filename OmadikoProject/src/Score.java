@@ -44,6 +44,10 @@ public class Score {
         return score;
     }
     
+    public static int returnBlueScore(){
+        return (score*2);
+    }
+    
     public static boolean returnBlue(){
         return blue;
     }

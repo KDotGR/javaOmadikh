@@ -7,8 +7,6 @@
 import java.io.File;
 import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Iterator;
-import java.io.FileReader;
 import java.io.FileNotFoundException;
 
 public class Lexicon {
@@ -17,17 +15,11 @@ public class Lexicon {
     
     public static void LexiconCreator(){
         try{
-            Scanner scanner = new Scanner(new  File("words.txt"));
-                
-                    System.out.println("ss5");
-                    while(scanner.hasNext()){
-                        //System.out.println("ss4");
-                        wordSet.add(scanner.nextLine());
-                        //System.out.println("ss3");
-                    }
-                    scanner.close();
-                  
- 
+            try (Scanner scanner = new Scanner(new  File("words.txt"))) {
+                while(scanner.hasNext()){
+                    wordSet.add(scanner.nextLine());
+                }
+            }
             }
             catch (FileNotFoundException e){
                 e.printStackTrace();

@@ -263,14 +263,20 @@ public final class Play extends JFrame{
                      } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
                          Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
                      }
-                     displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                     if(Score.returnBlue()==true){
+                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                        +Score.returnWord()+" και έκανες "+2*Score.returnBlueScore() +" βήματα!");
+                         a.foundWord(Score.returnWord(), 2*Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
+                     }
+                     else{
+                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
                         +Score.returnWord()+" και έκανες "+Score.returnScore() +" βήματα!");
+                         a.foundWord(Score.returnWord(), Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
+                     }
                      
-                     a.foundWord(Score.returnWord(), Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
+                     
+                     
                     updateProgressBar(a.returnPointsGathered()); //update στο progressbar
-                     Score.resetScore();
-                     Score.resetWord();
-                     ResetPanels();
                      
                  }
                  //Περίπτωση όπου η λέξη δεν υπάρχει
@@ -281,10 +287,12 @@ public final class Play extends JFrame{
                          Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
                      }
                      displayMessage(1,"Δεν υπάρχει η λέξη "+Score.returnWord());
-                     Score.resetScore();
-                     Score.resetWord();
-                     ResetPanels();
                  }
+                 
+                 Score.resetScore();
+                 Score.resetWord();
+                 Score.resetBlue();
+                 ResetPanels();
              }
          });
          //Τυχαία επιλογή αριθμού από μπαλαντέρ στο παιχνίδι
