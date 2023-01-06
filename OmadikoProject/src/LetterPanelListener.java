@@ -48,9 +48,6 @@ import javax.swing.JPanel;
                         
                         //Περίπτωση όπου το πάνελ που επιλέχθηκε δεν είναι μπαλαντέρ
                         if(letterPanel.returnType()!= 4){
-                            if(letterPanel.returnType() == 3)
-                                Score.addBlue();
-                            
                             clickedBox.setBackground(Color.YELLOW);
                             LetterPanel.changePrevButton(position);
                             Score.addScore(letterPanel.returnPoints());
@@ -60,7 +57,7 @@ import javax.swing.JPanel;
                         //Περίπτωση όπου το πάνελ που επιλέχθηκε είναι μπαλαντέρ
                         else{
                             int option =Play.WildLetterChooser();
-                            letterPanel.changeTypeofWild(Play.ReturnLetterArray(option).ReturnLetter(), option);
+                            /*letterPanel.changeTypeofWild(Play.ReturnLetterArray(option).ReturnLetter(), option);*/letterPanel.WildChanger(Play.ReturnLetterArray(option));
                             Score.resetScore();
                             Score.resetWord();
                             LetterPanel.changePrevButton(-1);

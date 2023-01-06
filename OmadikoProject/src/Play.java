@@ -263,21 +263,13 @@ public final class Play extends JFrame{
                      } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
                          Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
                      }
-                     if(Score.returnBlue() == true){
-                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
-                                 +Score.returnWord()+" και έκανες "+Score.returnScore()*2 +" βήματα!");
-                         updateProgressBar(a.returnPointsGathered()*2); //update στο progressbar
-                     }
-                     else{
-                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
-                                 +Score.returnWord()+" και έκανες "+Score.returnScore() +" βήματα!");
-                         updateProgressBar(a.returnPointsGathered()); //update στο progressbar
-                     }
+                     displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                        +Score.returnWord()+" και έκανες "+Score.returnScore() +" βήματα!");
                      
                      a.foundWord(Score.returnWord(), Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
+                    updateProgressBar(a.returnPointsGathered()); //update στο progressbar
                      Score.resetScore();
                      Score.resetWord();
-                     Score.resetBlue();
                      ResetPanels();
                      
                  }
