@@ -13,22 +13,29 @@ import java.io.FileNotFoundException;
 
 public class Lexicon {
     
-    protected HashSet<Word> wordSet;
+    protected static HashSet<String> wordSet = new HashSet<>();
     
-    Lexicon(){
-            try{
-            wordSet = new HashSet<Word>();
-            File wordFile = new File("words.txt");
-            Scanner scanner = new Scanner(wordFile);
-            while(scanner.hasNextLine()){
-                wordSet.add(new Word(scanner.nextLine()));
-                }
-            scanner.close();
-            System.out.println("is all good!");
-        }
-        catch (FileNotFoundException e){
-            System.out.println("File was not found");
-            e.printStackTrace();
-        }
+    public static void LexiconCreator(){
+        try{
+            Scanner scanner = new Scanner(new  File("words.txt"));
+                
+                    System.out.println("ss5");
+                    while(scanner.hasNext()){
+                        //System.out.println("ss4");
+                        wordSet.add(scanner.nextLine());
+                        //System.out.println("ss3");
+                    }
+                    scanner.close();
+                  
+ 
+            }
+            catch (FileNotFoundException e){
+                e.printStackTrace();
+                System.out.println("File was not found");
+            }
+    }
+    
+    public static boolean doesWordExist(String word){
+        return wordSet.contains(word);
     }
 }

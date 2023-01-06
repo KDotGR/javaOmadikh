@@ -22,4 +22,12 @@ public class SoundEffects {
         clip.open(audioStream);
         clip.start();
     }
+    
+    public static void wrongChoiceSound()throws LineUnavailableException, IOException, UnsupportedAudioFileException{
+        File clickSound = new File("sounds/soundEffects/deny.wav"); // Sound effect from Pixabay
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(clickSound);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioStream);
+        clip.start();
+    }
 }

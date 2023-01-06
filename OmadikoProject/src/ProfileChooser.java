@@ -79,7 +79,7 @@ public class ProfileChooser extends JFrame implements ActionListener{
         chooseProfileLabel.setVerticalAlignment(JLabel.CENTER);
         rowPanel1.add(chooseProfileLabel);
         mainPanel.add(rowPanel1);
-        
+         
         
         //κουμπί για νέο προφίλ
         newProfileButton = new JButton("Νέο Προφίλ");

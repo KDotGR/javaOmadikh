@@ -6,6 +6,7 @@
 
 public class LetterPanel {
     protected int position;
+    protected static int prevButton;
     protected char letter;
     protected int points;
     protected int type; // 1 = Άσπρο, 2 = Κόκκινο, 3 = Μπλε, 4 = Μπαλαντέρ
@@ -51,6 +52,10 @@ public class LetterPanel {
         return pnts;
     }
     
+    public int returnPoints(){
+        return points;
+    }
+    
     public int returnType(){
         return type;
     }
@@ -59,9 +64,23 @@ public class LetterPanel {
         return clicked;
     }
     
+    public int returnPosition(){
+        return position;
+    }
+    
     public void changeTypeofWild(char letter, int points){
         type = 1;
         this.letter = letter;
         this.points = points;
+    }
+    
+    protected static void changePrevButton(int n){
+        System.out.println("I changed to "+n);
+        prevButton = n;
+    }
+    
+    public static int returnPrevButton(){
+        System.out.println("I returned!");
+        return prevButton;
     }
 }

@@ -32,6 +32,8 @@ public final class Play extends JFrame{
     
     static Letter[] letterArray;
     
+    private Score score;
+    
     //Όλα τα στοιχεία που απαρτίζουν το γραφικό σώμα της εφαρμογής
     private final JMenuBar menuBar;
     private final JMenu menu,tools;
@@ -40,9 +42,14 @@ public final class Play extends JFrame{
     
     private final JMenuItem help,about;
     private final JPanel infoPanel, mainCenterPanel, selectionandProgressPanel,
-            gamePanel, selectionsPanel, progressPanel, messagePanel;
+            gamePanel, selectionsPanel, progressPanel;
+    
+    private static JPanel messagePanel;
     
     private final JLabel infoLabel;
+    private static JLabel messageLabel;
+    
+    private static JButton sendWord;
     
     private static final int gameRows = 8;
     private static final int gameCols = 8;
@@ -97,22 +104,26 @@ public final class Play extends JFrame{
         JLabel label2=new JLabel("GAME");
         label2.setHorizontalAlignment(JLabel.CENTER);
         label2.setVerticalAlignment(JLabel.CENTER);
-        JLabel label3=new JLabel("SELECTIONS");
-        label3.setHorizontalAlignment(JLabel.CENTER);
-        label3.setVerticalAlignment(JLabel.CENTER);
+        //JLabel label3=new JLabel("SELECTIONS");
+        //label3.setHorizontalAlignment(JLabel.CENTER);
+        //label3.setVerticalAlignment(JLabel.CENTER);
+        sendWord = new JButton("Υποβολή"); 
+        
+        
+        
         JLabel label4=new JLabel("PROGRESS");
         label4.setHorizontalAlignment(JLabel.CENTER);
         label4.setVerticalAlignment(JLabel.CENTER);
-        JLabel label5=new JLabel("MESSAGES");
-        label5.setHorizontalAlignment(JLabel.CENTER);
-        label5.setVerticalAlignment(JLabel.CENTER);
+        messageLabel = new JLabel("MESSAGES");
+        messageLabel.setHorizontalAlignment(JLabel.CENTER);
+        messageLabel.setVerticalAlignment(JLabel.CENTER);
         
         //Προσωρινή προσθήκη διακριτικών label στα panel
         infoPanel.add(infoLabel);
        // gamePanel.add(label2);
-        selectionsPanel.add(label3);
+        selectionsPanel.add(sendWord);
         progressPanel.add(label4);
-        messagePanel.add(label5);
+        messagePanel.add(messageLabel);
         
          // Ορισμός χρώματος και μεγέθους στα panel για διακριτικούς λόγους
 
@@ -128,7 +139,6 @@ public final class Play extends JFrame{
         messagePanel.setPreferredSize(new Dimension(100,40));
 
         //Game Panel
-        //gamePanel.setBackground(Color.red);
         gamePanel.setPreferredSize(new Dimension(600,40));
         
         //selectionandProgress Panel ( Υπερ panel των selection panel και progress panel )
@@ -219,7 +229,39 @@ public final class Play extends JFrame{
         //Διαμόρφωση πλαισίου πάνελ-γραμμάτων παιχνιδιού
          Border br = BorderFactory.createLineBorder(Color.black);
          
+         FoundWords a = new FoundWords();
          
+         //Κουμπί υποβολής λέξης
+         sendWord.addActionListener((ActionEvent e) -> {
+             
+             //Περίπτωση όπου η λέξη έχει ήδη βρεθεί
+             if(a.checkIfWordFound(Score.returnWord()) == true){
+                 displayMessage(0,"Αυτή η λέξη έχει βρεθεί ήδη!");
+                 Score.resetWord();
+                 Score.resetScore();
+                 ResetPanels();
+             }
+             
+             else{
+                 //Περίπτωση όπου η λέξη υπάρχει
+                 if(Lexicon.doesWordExist(Score.returnWord()) == true){
+                     displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                        +Score.returnWord()+" και έκανες "+Score.returnScore() +"βήματα!");
+                     a.foundWord(Score.returnWord(), Score.returnScore());
+                     Score.resetScore();
+                     Score.resetWord();
+                     ResetPanels();
+                     
+                 }
+                 //Περίπτωση όπου η λέξη δεν υπάρχει
+                 else{
+                     displayMessage(1,"Δεν υπάρχει η λέξη "+Score.returnWord());
+                     Score.resetScore();
+                     Score.resetWord();
+                     ResetPanels();
+                 }
+             }
+         });
          //Τυχαία επιλογή αριθμού από μπαλαντέρ στο παιχνίδι
          int[] placeOfWilds;
          placeOfWilds = new int[returnRandom(0,4)];
@@ -245,6 +287,8 @@ public final class Play extends JFrame{
          for(int i=0; i < placeOfBlueLetters.length; i++)
              placeOfBlueLetters[i] = returnRandom(0,NUM-1,placeOfWilds,placeOfRedLetters);
          
+         //Αρχικοποίηση του PrevButton σε -1
+         LetterPanel.changePrevButton(-1);
          
          // --------------------- Δημιουργία των Panel ------------------------
          
@@ -260,6 +304,7 @@ public final class Play extends JFrame{
             Letter chosenLetter = RandomLetterChooser();
             
             keeper1 = 0;
+            
             
             //Αν το panel έχει επιλεχθεί για μπαλαντέρ, κάνε το πάνελ μπαλαντέρ
             for(int l=0; l < placeOfWilds.length; l++){
@@ -335,7 +380,8 @@ public final class Play extends JFrame{
     
     //Κάνει reset τα Panels στο σωστό τους χρώμα ( για χρήση μετά από λάθος επιλογή )
     protected static void ResetPanels(){
-        
+        System.out.println("haha");
+        System.out.println(LetterPanel.returnPrevButton());
         for(int i=0; i < NUM; i++){
             charLabels[i].setText(letterPanels[i].displayLetter());
             pointLabels[i].setText(letterPanels[i].displayPoints());
@@ -617,5 +663,17 @@ public final class Play extends JFrame{
     // --getter για χρήση από την κλάση LetterPanelListener
     protected static Letter ReturnLetterArray(int n){
         return letterArray[n];
+    }
+    
+    protected static void displayMessage(int color, String message){
+        messageLabel.setText(message);
+        if(color == 0){
+            messagePanel.setBackground(Color.gray);
+        }
+        else if(color == 1){
+            messagePanel.setBackground(Color.red);
+        }
+        else
+            messagePanel.setBackground(Color.green);
     }
 }
