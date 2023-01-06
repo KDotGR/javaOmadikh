@@ -25,8 +25,14 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.io.IOException;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
  
 public final class Play extends JFrame{
     
@@ -50,7 +56,7 @@ public final class Play extends JFrame{
     private static JLabel messageLabel;
     
     private static JButton sendWord;
-    
+    private static JProgressBar progressBar;
     private static final int gameRows = 8;
     private static final int gameCols = 8;
     private static final int NUM = gameRows * gameCols;
@@ -63,7 +69,7 @@ public final class Play extends JFrame{
     Play(Profile profile,int StartGame){
         
         //Βασικά χαρακτηριστικά και λειτουργίες του Frame
-        this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής -- work in progress
+        this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH); //Ξεκινάει σε fullscreen
        
@@ -109,6 +115,12 @@ public final class Play extends JFrame{
         //label3.setVerticalAlignment(JLabel.CENTER);
         sendWord = new JButton("Υποβολή"); 
         
+        progressBar = new JProgressBar(0,200);
+        progressBar.setStringPainted(true);
+        updateProgressBar(0);
+        progressBar.setFont(new Font("Verdana",Font.BOLD,25));
+        progressBar.setForeground(Color.CYAN);
+        progressBar.setBackground(Color.BLACK);
         
         
         JLabel label4=new JLabel("PROGRESS");
@@ -122,7 +134,7 @@ public final class Play extends JFrame{
         infoPanel.add(infoLabel);
        // gamePanel.add(label2);
         selectionsPanel.add(sendWord);
-        progressPanel.add(label4);
+        progressPanel.add(progressBar,BorderLayout.SOUTH);
         messagePanel.add(messageLabel);
         
          // Ορισμός χρώματος και μεγέθους στα panel για διακριτικούς λόγους
@@ -230,10 +242,11 @@ public final class Play extends JFrame{
          Border br = BorderFactory.createLineBorder(Color.black);
          
          FoundWords a = new FoundWords();
+         Score.resetBlue();
          
          //Κουμπί υποβολής λέξης
          sendWord.addActionListener((ActionEvent e) -> {
-             
+             LetterPanel.changePrevButton(-1);
              //Περίπτωση όπου η λέξη έχει ήδη βρεθεί
              if(a.checkIfWordFound(Score.returnWord()) == true){
                  displayMessage(0,"Αυτή η λέξη έχει βρεθεί ήδη!");
@@ -245,16 +258,36 @@ public final class Play extends JFrame{
              else{
                  //Περίπτωση όπου η λέξη υπάρχει
                  if(Lexicon.doesWordExist(Score.returnWord()) == true){
-                     displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
-                        +Score.returnWord()+" και έκανες "+Score.returnScore() +"βήματα!");
-                     a.foundWord(Score.returnWord(), Score.returnScore());
+                     try {
+                         SoundEffects.correctWord();
+                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+                         Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                     if(Score.returnBlue() == true){
+                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                                 +Score.returnWord()+" και έκανες "+Score.returnScore()*2 +" βήματα!");
+                         updateProgressBar(a.returnPointsGathered()*2); //update στο progressbar
+                     }
+                     else{
+                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                                 +Score.returnWord()+" και έκανες "+Score.returnScore() +" βήματα!");
+                         updateProgressBar(a.returnPointsGathered()); //update στο progressbar
+                     }
+                     
+                     a.foundWord(Score.returnWord(), Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
                      Score.resetScore();
                      Score.resetWord();
+                     Score.resetBlue();
                      ResetPanels();
                      
                  }
                  //Περίπτωση όπου η λέξη δεν υπάρχει
                  else{
+                     try {
+                         SoundEffects.wrongWord();
+                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+                         Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+                     }
                      displayMessage(1,"Δεν υπάρχει η λέξη "+Score.returnWord());
                      Score.resetScore();
                      Score.resetWord();
@@ -380,7 +413,7 @@ public final class Play extends JFrame{
     
     //Κάνει reset τα Panels στο σωστό τους χρώμα ( για χρήση μετά από λάθος επιλογή )
     protected static void ResetPanels(){
-        System.out.println("haha");
+        
         System.out.println(LetterPanel.returnPrevButton());
         for(int i=0; i < NUM; i++){
             charLabels[i].setText(letterPanels[i].displayLetter());
@@ -667,13 +700,15 @@ public final class Play extends JFrame{
     
     protected static void displayMessage(int color, String message){
         messageLabel.setText(message);
-        if(color == 0){
-            messagePanel.setBackground(Color.gray);
+        switch (color) {
+            case 0 -> messagePanel.setBackground(Color.gray);
+            case 1 -> messagePanel.setBackground(Color.red);
+            default -> messagePanel.setBackground(Color.green);
         }
-        else if(color == 1){
-            messagePanel.setBackground(Color.red);
-        }
-        else
-            messagePanel.setBackground(Color.green);
+    }
+    
+    protected static void updateProgressBar(int value){
+        progressBar.setValue(value);
+        progressBar.setString("Βήματα: "+value+"/200");
     }
 }

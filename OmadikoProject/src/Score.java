@@ -7,7 +7,7 @@
 public class Score {
     private static int score;
     private static String word;
-    
+    private static boolean blue;
     
     public static void addScore(int points){
         score = score + points;
@@ -24,8 +24,16 @@ public class Score {
             word=word+s;
     }
     
+    public static void addBlue(){
+        blue = true;
+    }
+    
     public static void resetWord(){
-        word=null;
+        word = null;
+    }
+    
+    public static void resetBlue(){
+        blue = false;
     }
     
     public static String returnWord(){
@@ -34,5 +42,9 @@ public class Score {
     
     public static int returnScore(){
         return score;
+    }
+    
+    public static boolean returnBlue(){
+        return blue;
     }
 }

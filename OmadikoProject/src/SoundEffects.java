@@ -30,4 +30,20 @@ public class SoundEffects {
         clip.open(audioStream);
         clip.start();
     }
+    
+    public static void wrongWord()throws LineUnavailableException, IOException, UnsupportedAudioFileException{
+        File clickSound = new File("sounds/soundEffects/wrongWord.wav"); // Sound effect from Pixabay
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(clickSound);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioStream);
+        clip.start();
+    }
+    
+    public static void correctWord()throws LineUnavailableException, IOException, UnsupportedAudioFileException{
+        File clickSound = new File("sounds/soundEffects/correctWord.wav"); // Sound effect from Pixabay
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(clickSound);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioStream);
+        clip.start();
+    }
 }

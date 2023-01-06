@@ -5,8 +5,8 @@
 */
 
 public class Letter {
-    private int points;
-    private char letter;
+    private final int points;
+    private final char letter;
     
     Letter(char letter, int points){
         this.letter=letter;

@@ -33,7 +33,7 @@ import javax.swing.JPanel;
     	{
               //Αναφορά στο panel που κλικαρίστηκε
               JPanel clickedBox =(JPanel)me.getSource();
-              //System.out.println("beep boop");
+              
                 try {
                     prevButton = LetterPanel.returnPrevButton();
                     //Το κλικ είναι έγκυρο μόνο αν ο χρήστης πατήσει γειτνιακό πάνελ
@@ -47,7 +47,10 @@ import javax.swing.JPanel;
                         SoundEffects.clickSound();
                         
                         //Περίπτωση όπου το πάνελ που επιλέχθηκε δεν είναι μπαλαντέρ
-                        if(letterPanel.returnType()!=4){
+                        if(letterPanel.returnType()!= 4){
+                            if(letterPanel.returnType() == 3)
+                                Score.addBlue();
+                            
                             clickedBox.setBackground(Color.YELLOW);
                             LetterPanel.changePrevButton(position);
                             Score.addScore(letterPanel.returnPoints());
@@ -59,6 +62,7 @@ import javax.swing.JPanel;
                             int option =Play.WildLetterChooser();
                             letterPanel.changeTypeofWild(Play.ReturnLetterArray(option).ReturnLetter(), option);
                             Score.resetScore();
+                            Score.resetWord();
                             LetterPanel.changePrevButton(-1);
                             Play.ResetPanels(letterPanel.position);
                         }
@@ -70,6 +74,7 @@ import javax.swing.JPanel;
                         Play.displayMessage(1, "Τα γράμματα που επιλέγεις πρέπει να είναι γειτονικά");
                         LetterPanel.changePrevButton(-1);
                         Score.resetScore();
+                        Score.resetWord();
                         Play.ResetPanels();
                     }
                         

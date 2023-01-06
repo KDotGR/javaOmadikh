@@ -75,12 +75,10 @@ public class LetterPanel {
     }
     
     protected static void changePrevButton(int n){
-        System.out.println("I changed to "+n);
         prevButton = n;
     }
     
     public static int returnPrevButton(){
-        System.out.println("I returned!");
         return prevButton;
     }
 }

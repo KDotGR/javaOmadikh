@@ -15,17 +15,21 @@ public class FoundWords {
     
     FoundWords(){
  
-            FoundWordsSet = new HashSet<String>();
+            FoundWordsSet = new HashSet<>();
             numberOfWordsFound =0;
             pointsGathered=0;
         }
     protected void foundWord(String word, int points){
         FoundWordsSet.add(word);
         numberOfWordsFound++;
-        pointsGathered = points;
+        pointsGathered = pointsGathered+points;
     }
     
     protected boolean checkIfWordFound(String word){
         return FoundWordsSet.contains(word);
+    }
+    
+    protected int returnPointsGathered(){
+        return pointsGathered;
     }
 }
