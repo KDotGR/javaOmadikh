@@ -32,4 +32,8 @@ public class FoundWords {
     protected int returnPointsGathered(){
         return pointsGathered;
     }
+    
+    public int returnNumberOfWordsFound(){
+        return numberOfWordsFound;
+    }
 }

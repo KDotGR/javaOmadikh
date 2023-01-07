@@ -47,13 +47,14 @@ public final class Play extends JFrame{
             searchWordFile, exit;
     
     private final JMenuItem help,about;
-    private final JPanel infoPanel, mainCenterPanel, selectionandProgressPanel,
+    private final JPanel infoPanel, mainCenterPanel,SendButtonSelandProgPanel, selectionandProgressPanel,
             gamePanel, selectionsPanel, progressPanel;
     
     private static JPanel messagePanel;
     
     private final JLabel infoLabel;
     private static JLabel messageLabel;
+    private JLabel wordsFoundLabel;
     
     private static JButton sendWord;
     private static JProgressBar progressBar;
@@ -87,6 +88,7 @@ public final class Play extends JFrame{
         infoPanel= new JPanel();
         mainCenterPanel = new JPanel();
         gamePanel = new JPanel();
+        SendButtonSelandProgPanel = new JPanel();
         selectionandProgressPanel = new JPanel();
         selectionsPanel= new JPanel();
         progressPanel = new JPanel();
@@ -94,6 +96,8 @@ public final class Play extends JFrame{
         
         //Ορισμούς του layout κάθε panel
         mainCenterPanel.setLayout(new GridLayout(1,2));
+        
+        SendButtonSelandProgPanel.setLayout(new BorderLayout());
         selectionandProgressPanel.setLayout(new GridLayout(2,1));
         gamePanel.setLayout(new GridLayout(gameRows,gameCols,6,6));
         infoPanel.setLayout(new BorderLayout());
@@ -107,14 +111,9 @@ public final class Play extends JFrame{
             +"  Σερί: "+profile.showStreak());
         infoLabel.setHorizontalAlignment(JLabel.CENTER);
         infoLabel.setVerticalAlignment(JLabel.CENTER);
-        JLabel label2=new JLabel("GAME");
-        label2.setHorizontalAlignment(JLabel.CENTER);
-        label2.setVerticalAlignment(JLabel.CENTER);
-        //JLabel label3=new JLabel("SELECTIONS");
-        //label3.setHorizontalAlignment(JLabel.CENTER);
-        //label3.setVerticalAlignment(JLabel.CENTER);
-        sendWord = new JButton("Υποβολή"); 
         
+        sendWord = new JButton("Υποβολή"); 
+        sendWord.setFocusable(false);
         progressBar = new JProgressBar(0,200);
         progressBar.setStringPainted(true);
         updateProgressBar(0);
@@ -132,8 +131,8 @@ public final class Play extends JFrame{
         
         //Προσωρινή προσθήκη διακριτικών label στα panel
         infoPanel.add(infoLabel);
-       // gamePanel.add(label2);
-        selectionsPanel.add(sendWord);
+        //progressPanel.add(wordsFoundLabel);
+        SendButtonSelandProgPanel.add(sendWord,BorderLayout.WEST);
         progressPanel.add(progressBar,BorderLayout.SOUTH);
         messagePanel.add(messageLabel);
         
@@ -173,7 +172,8 @@ public final class Play extends JFrame{
         //Εισαγωγή των υπο πάνελ στο master panel τους
         mainCenterPanel.add(gamePanel);
         mainCenterPanel.setBackground(Color.GRAY);
-        mainCenterPanel.add(selectionandProgressPanel);
+        mainCenterPanel.add(SendButtonSelandProgPanel);
+        SendButtonSelandProgPanel.add(selectionandProgressPanel);
         selectionandProgressPanel.add(selectionsPanel);
         selectionandProgressPanel.add(progressPanel);
         
@@ -243,10 +243,16 @@ public final class Play extends JFrame{
          
          FoundWords a = new FoundWords();
          Score.resetBlue();
+         wordsFoundLabel=new JLabel("Λέξεις που βρέθηκαν: "+a.returnNumberOfWordsFound());
+         wordsFoundLabel.setFont(new Font("Sans",Font.PLAIN,30));
+         wordsFoundLabel.setHorizontalAlignment(JLabel.CENTER);
+         wordsFoundLabel.setVerticalAlignment(JLabel.CENTER);
+         progressPanel.add(wordsFoundLabel);
          
          //Κουμπί υποβολής λέξης
          sendWord.addActionListener((ActionEvent e) -> {
              LetterPanel.changePrevButton(-1);
+             
              //Περίπτωση όπου η λέξη έχει ήδη βρεθεί
              if(a.checkIfWordFound(Score.returnWord()) == true){
                  displayMessage(0,"Αυτή η λέξη έχει βρεθεί ήδη!");
@@ -265,7 +271,7 @@ public final class Play extends JFrame{
                      }
                      if(Score.returnBlue()==true){
                          displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
-                        +Score.returnWord()+" και έκανες "+2*Score.returnBlueScore() +" βήματα!");
+                        +Score.returnWord()+" και έκανες "+Score.returnBlueScore() +" βήματα!");
                          a.foundWord(Score.returnWord(), 2*Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
                      }
                      else{
@@ -277,6 +283,7 @@ public final class Play extends JFrame{
                      
                      
                     updateProgressBar(a.returnPointsGathered()); //update στο progressbar
+                    updateWordsFoundLabel(a.returnNumberOfWordsFound());
                      
                  }
                  //Περίπτωση όπου η λέξη δεν υπάρχει
@@ -289,6 +296,8 @@ public final class Play extends JFrame{
                      displayMessage(1,"Δεν υπάρχει η λέξη "+Score.returnWord());
                  }
                  
+                 //reset των Πάνελ και των μεταβλητών που κρατάνε τα δεδομένα
+                 //της λέξης που σχηματίζεται
                  Score.resetScore();
                  Score.resetWord();
                  Score.resetBlue();
@@ -698,6 +707,7 @@ public final class Play extends JFrame{
         return letterArray[n];
     }
     
+    //Εμφανίζει μήνυμα στον παίκτη στο κάτω μέρος της οθόνης
     protected static void displayMessage(int color, String message){
         messageLabel.setText(message);
         switch (color) {
@@ -707,8 +717,14 @@ public final class Play extends JFrame{
         }
     }
     
+    //Ενημερώνει το progressbar με την τιμή value
     protected static void updateProgressBar(int value){
         progressBar.setValue(value);
         progressBar.setString("Βήματα: "+value+"/200");
+    }
+    
+    //Ενημερώνει το πόσες λέξεις έχουν βρεθεί
+    protected void updateWordsFoundLabel(int value){
+        wordsFoundLabel.setText("Λέξεις που βρέθηκαν: "+value);
     }
 }

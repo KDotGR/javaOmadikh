@@ -4,10 +4,10 @@
     Αναστάσιος Κουτσώνης        321/2018106
  */
 public class Profile {
-    private String name;
-    private int wins;
-    private int losses;
-    private int streak;
+    private final String name;
+    private final int wins;
+    private final int losses;
+    private final int streak;
     
     Profile(String name){
         this.name = name;
