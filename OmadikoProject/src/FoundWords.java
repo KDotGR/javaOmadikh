@@ -18,6 +18,7 @@ public class FoundWords {
             FoundWordsSet = new HashSet<>();
             numberOfWordsFound =0;
             pointsGathered=0;
+            System.out.println(numberOfWordsFound);
         }
     protected void foundWord(String word, int points){
         FoundWordsSet.add(word);

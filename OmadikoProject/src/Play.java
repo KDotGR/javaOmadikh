@@ -47,12 +47,12 @@ public final class Play extends JFrame{
             searchWordFile, exit;
     
     private final JMenuItem help,about;
-    private final JPanel infoPanel, mainCenterPanel,SendButtonSelandProgPanel, selectionandProgressPanel,
+    private  JPanel infoPanel, mainCenterPanel,SendButtonSelandProgPanel, selectionandProgressPanel,
             gamePanel, selectionsPanel, progressPanel;
     
     private static JPanel messagePanel;
     
-    private final JLabel infoLabel;
+    private static JLabel infoLabel;
     private static JLabel messageLabel;
     private JLabel wordsFoundLabel;
     
@@ -61,11 +61,11 @@ public final class Play extends JFrame{
     private static final int gameRows = 8;
     private static final int gameCols = 8;
     private static final int NUM = gameRows * gameCols;
-    private static final JPanel[] charPanels = new JPanel[NUM];
-    private static final JLabel[] charLabels = new JLabel[NUM];
-    private static final JLabel[] pointLabels = new JLabel [NUM];
+    private static  JPanel[] charPanels = new JPanel[NUM];
+    private static  JLabel[] charLabels = new JLabel[NUM];
+    private static  JLabel[] pointLabels = new JLabel [NUM];
     
-    private static final LetterPanel[] letterPanels = new LetterPanel [NUM];
+    private static LetterPanel[] letterPanels = new LetterPanel [NUM];
     
     Play(Profile profile,int StartGame){
         
@@ -107,8 +107,7 @@ public final class Play extends JFrame{
         
         //Προσωρινή προσθήκη label στα panel για να αναγνωρίζουμε την λειτουργία
         //τους
-        infoLabel=new JLabel("Νίκες: "+profile.showWins()+"  Ήττες: "+profile.showLosses()
-            +"  Σερί: "+profile.showStreak());
+        infoLabel=new JLabel();
         infoLabel.setHorizontalAlignment(JLabel.CENTER);
         infoLabel.setVerticalAlignment(JLabel.CENTER);
         
@@ -116,7 +115,7 @@ public final class Play extends JFrame{
         sendWord.setFocusable(false);
         progressBar = new JProgressBar(0,200);
         progressBar.setStringPainted(true);
-        updateProgressBar(0);
+        //updateProgressBar(0);
         progressBar.setFont(new Font("Verdana",Font.BOLD,25));
         progressBar.setForeground(Color.CYAN);
         progressBar.setBackground(Color.BLACK);
@@ -230,9 +229,9 @@ public final class Play extends JFrame{
         this.setBackground(Color.GRAY);
         //this.pack();
         this.setVisible(true);
-        
+        wordsFoundLabel =new JLabel();
         if(StartGame==1){
-            NewGame();
+           NewGame();
         }
     }
     
@@ -241,9 +240,13 @@ public final class Play extends JFrame{
         //Διαμόρφωση πλαισίου πάνελ-γραμμάτων παιχνιδιού
          Border br = BorderFactory.createLineBorder(Color.black);
          
+         //Ενημέρωση του Info Label
+         updateInfoLabel(ProfileChooser.returnProfile());
+         
          FoundWords a = new FoundWords();
          Score.resetBlue();
-         wordsFoundLabel=new JLabel("Λέξεις που βρέθηκαν: "+a.returnNumberOfWordsFound());
+         
+         //updateWordsFoundLabel(0);
          wordsFoundLabel.setFont(new Font("Sans",Font.PLAIN,30));
          wordsFoundLabel.setHorizontalAlignment(JLabel.CENTER);
          wordsFoundLabel.setVerticalAlignment(JLabel.CENTER);
@@ -281,10 +284,13 @@ public final class Play extends JFrame{
                      }
                      
                      
-                     
-                    updateProgressBar(a.returnPointsGathered()); //update στο progressbar
-                    updateWordsFoundLabel(a.returnNumberOfWordsFound());
-                     
+                    updateProgressBar(a.returnPointsGathered(),a); //update στο progressbar
+                    updateWordsFoundLabel(a.returnNumberOfWordsFound());   
+                    if(a.returnPointsGathered()>=10){
+                            ProfileChooser.initGame(ProfileChooser.returnProfile());
+                            this.dispose();
+                    }
+                 
                  }
                  //Περίπτωση όπου η λέξη δεν υπάρχει
                  else{
@@ -415,9 +421,11 @@ public final class Play extends JFrame{
             //Κάνει τα panel clickable
             charPanels[i].addMouseListener(new LetterPanelListener(letterPanels[i]));
             gamePanel.add(charPanels[i]);
-            
         }
         gamePanel.setBackground(Color.GRAY);
+        
+        if(a.returnPointsGathered()>=10)
+            return; 
     }
     
     //Κάνει reset τα Panels στο σωστό τους χρώμα ( για χρήση μετά από λάθος επιλογή )
@@ -716,15 +724,50 @@ public final class Play extends JFrame{
             default -> messagePanel.setBackground(Color.green);
         }
     }
-    
-    //Ενημερώνει το progressbar με την τιμή value
-    protected static void updateProgressBar(int value){
+   /* protected void updateProgressBar(int value){
         progressBar.setValue(value);
         progressBar.setString("Βήματα: "+value+"/200");
+    }  
+    */
+    
+    //Ενημερώνει το progressbar με την τιμή value
+    protected void updateProgressBar(int value,FoundWords a){
+        progressBar.setValue(value);
+        progressBar.setString("Βήματα: "+value+"/200");
+        if(value>=10){
+            System.out.println(); JOptionPane.showMessageDialog(null,
+            "Συγχαρητήρια! Νίκησες!","Νίκησες!",JOptionPane.INFORMATION_MESSAGE);
+            ProfileChooser.returnProfile().newWin();
+            //updateInfoLabel(ProfileChooser.returnProfile());
+            //--------Διαγραφή πινάκων για ομαλή λειτουργία του επόμενου--------
+            //--------------------------παιχνιδιού------------------------------
+            for(int i=0; i<charPanels.length; i++){
+                charPanels[i] = null;
+                letterPanels[i] = null;
+                pointLabels[i] = null;
+                charLabels[i] = null;
+            }
+            //for(int i=0; i<wordsFoundLabel.length; i++)
+
+            //selectionsPanel = null;
+            gamePanel.removeAll();
+            progressBar.setValue(0);
+            updateWordsFoundLabel(0);
+            a = null;
+            
+        }
     }
     
     //Ενημερώνει το πόσες λέξεις έχουν βρεθεί
     protected void updateWordsFoundLabel(int value){
         wordsFoundLabel.setText("Λέξεις που βρέθηκαν: "+value);
+        System.out.println("found "+value);
     }
+    
+    protected static void updateInfoLabel(Profile profile){
+        infoLabel.setText("Νίκες: "+profile.showWins()+"  Ήττες: "+profile.showLosses()
+            +"  Σερί: "+profile.showStreak());
+    }
+    
+    
 }

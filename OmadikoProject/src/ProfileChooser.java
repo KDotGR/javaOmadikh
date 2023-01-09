@@ -29,14 +29,16 @@ public class ProfileChooser extends JFrame implements ActionListener{
     
     CardLayout card;
     private final JButton newProfileButton;
-    
+    protected static Profile[] profiles;
+    protected int numofProfiles;
     private final JFrame frame = new JFrame ();
     private final JPanel welcomePanel,mainPanel,rowPanel1,rowPanel2,rowPanel3;
     private final JLabel welcomeLabel,chooseProfileLabel,enterUsername;
     private JTextField username;
     
     ProfileChooser(){
-        
+        numofProfiles=0;
+        profiles = new Profile[numofProfiles+1];
         //Προσθήκη του logo της εφαρμογής
         ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
         frame.setIconImage(image.getImage());
@@ -95,12 +97,11 @@ public class ProfileChooser extends JFrame implements ActionListener{
         //Προσαρμογή του textField ----- θα εμφανίζεται μόνο σε περίπτωση
         //που πατηθεί το κουμπί "Νέο Προφίλ"
         username = new JTextField("Όνομα");
-        username.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Play a = new Play(new Profile(username.getText()),1);             
-                frame.dispose();
-            }
+        username.addActionListener((ActionEvent e) -> {
+            profiles[numofProfiles] =new Profile(username.getText());
+            initGame(profiles[numofProfiles]);
+            //Play a = new Play(new Profile(username.getText()),1);
+            frame.dispose();
         });
         
         username.addFocusListener(new FocusListener(){
@@ -136,4 +137,12 @@ public class ProfileChooser extends JFrame implements ActionListener{
         }
     }
     
+    //Επιστρέφει το τελευταίο στοιχείο του πίνακα profiles
+    protected static Profile returnProfile(){
+        return profiles[profiles.length-1];
+    }
+    
+    public static void initGame(Profile chosenProf){
+        Play play = new Play(chosenProf,1);
+    }
 }
