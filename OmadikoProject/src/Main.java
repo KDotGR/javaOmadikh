@@ -29,7 +29,7 @@ public class Main {
         Lexicon.LexiconCreator();
         
         //δημιουργία του JFrame
-        new ProfileChooser();
+        new ProfileChooser(0);
         
         
     }  

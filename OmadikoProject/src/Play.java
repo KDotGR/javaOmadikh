@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
  
@@ -185,12 +186,29 @@ public final class Play extends JFrame{
         ImageIcon settingsImage = new ImageIcon("images/menu.png"); //via https://www.flaticon.com/authors/mayor-icons
         menu.setIcon(settingsImage);
         
-        //Επιλογή Νέο Παιχνίδι
-        newGame = new JMenuItem("Νέο Παιχνίδι",new ImageIcon("images/replay.png")); //via https://www.flaticon.com/authors/pixel-perfect
+        //Επιλογή Νέο Παιχνίδι ------> Ξεκινάει νέο παιχνίδι και περνάει ως ήττα το προηγούμενο
+         newGame = new JMenuItem(new AbstractAction("Νέο Παιχνίδι",new ImageIcon("images/replay.png")) { //via https://www.flaticon.com/authors/pixel-perfect
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        ProfileChooser.initGame(profile);
+        profile.newLoss();
+        updateInfoLabel(profile);
+        dispose();
+    }
+});
         menu.add(newGame);
         
-        //Επιλογή Ακύρωση/Τερματισμός παιχνιδιού
-        endGame = new JMenuItem("Ακύρωση/Τερματισμός παιχνιδιού",new ImageIcon("images/terminategame.png")); //via https://www.flaticon.com/authors/sumberrejeki
+        //Επιλογή Ακύρωση/Τερματισμός παιχνιδιού ------> Ξεκινάει νέο παιχνίδι και περνάει ως ήττα το προηγούμενο
+        //endGame = new JMenuItem("Ακύρωση/Τερματισμός παιχνιδιού",new ImageIcon("images/terminategame.png")); //
+        endGame = new JMenuItem(new AbstractAction("Ακύρωση/Τερματισμός παιχνιδιού",new ImageIcon("images/terminategame.png")) { //via https://www.flaticon.com/authors/sumberrejeki
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        ProfileChooser.initGame(profile);
+        profile.newLoss();
+        updateInfoLabel(profile);
+        dispose();
+    }
+});
         menu.add(endGame);
         
          //Επιλογή Αλλαγή Προφίλ

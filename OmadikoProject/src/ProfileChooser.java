@@ -30,14 +30,16 @@ public class ProfileChooser extends JFrame implements ActionListener{
     CardLayout card;
     private final JButton newProfileButton;
     protected static Profile[] profiles;
-    protected int numofProfiles;
+    protected static int numofProfiles;
     private final JFrame frame = new JFrame ();
     private final JPanel welcomePanel,mainPanel,rowPanel1,rowPanel2,rowPanel3;
     private final JLabel welcomeLabel,chooseProfileLabel,enterUsername;
     private JTextField username;
     
-    ProfileChooser(){
-        numofProfiles=0;
+    ProfileChooser(int value){
+        if(value==0)
+            numofProfiles=0;
+        
         profiles = new Profile[numofProfiles+1];
         //Προσθήκη του logo της εφαρμογής
         ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
