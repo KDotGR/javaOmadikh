@@ -17,14 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.BorderFactory;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Random;
 import java.util.logging.Level;
@@ -80,6 +79,10 @@ public final class Play extends JFrame{
         
         //Αρχικοποίηση του πίνακα γραμμάτων με τα γράμματα και τις τιμές τους
         InitLetterArray();
+        
+        //Αρχικοποίηση του ArrayList που αποθηκεύει την λέξη ενόσω την ψάχνει
+        //ο χρήστης
+        Score.initArrayList();
         
         //Προσθήκη του logo της εφαρμογής
         ImageIcon image = new ImageIcon("images/logo.png"); //via https://www.freepik.com
@@ -177,7 +180,10 @@ public final class Play extends JFrame{
         selectionandProgressPanel.add(selectionsPanel);
         selectionandProgressPanel.add(progressPanel);
         
-        //Δημιουργία του Menu Bar
+        
+    //---------------------------Δημιουργία του Μενού---------------------------
+       
+    //Δημιουργία του Menu Bar
         menuBar = new JMenuBar();
         
   
@@ -212,7 +218,16 @@ public final class Play extends JFrame{
         menu.add(endGame);
         
          //Επιλογή Αλλαγή Προφίλ
-        changeProfile = new JMenuItem("Αλλαγή Προφίλ",new ImageIcon("images/user.png")); //via https://www.freepik.com
+        //changeProfile = new JMenuItem("Αλλαγή Προφίλ",new ImageIcon("images/user.png")); //via https://www.freepik.com
+        changeProfile = new JMenuItem(new AbstractAction("Αλλαγή Προφίλ",new ImageIcon("images/user.png")) { //via https://www.freepik.com
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new ProfileChooser(1);
+            profile.newLoss();
+            updateInfoLabel(profile);
+            dispose();
+        }
+});
         menu.add(changeProfile);
         
          //Επιλογή Ρυθμίσεις
@@ -234,11 +249,22 @@ public final class Play extends JFrame{
         tools = new JMenu("Εργαλεία");
         
         //Επιλογή Βοήθεια
-        help = new JMenuItem("Βοήθεια",new ImageIcon("images/help.png")); //via  https://www.flaticon.com/authors/ilham-fitrotul-hayat
+        help = new JMenuItem(new AbstractAction("Βοήθεια",new ImageIcon("images/help.png")) { // via  https://www.flaticon.com/authors/ilham-fitrotul-hayat
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(null,returnHelpString(),"Βοήθεια",JOptionPane.INFORMATION_MESSAGE);
+        }
+});
         tools.add(help);
         
         //Επιλογή Πληροφορίες
-        about = new JMenuItem("Πληροφορίες",new ImageIcon("images/info.png")); //via  https://www.flaticon.com/authors/roundicons
+        about = new JMenuItem(new AbstractAction("Πληροφορίες",new ImageIcon("images/info.png")) { // via  https://www.flaticon.com/authors/roundicons
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(null,returnAboutString(),"Πληροφορίες",JOptionPane.INFORMATION_MESSAGE);
+        }
+});
+        
         tools.add(about);
         
         menuBar.add(tools);
@@ -248,6 +274,18 @@ public final class Play extends JFrame{
         //this.pack();
         this.setVisible(true);
         wordsFoundLabel =new JLabel();
+        
+        //Σε δεξί κλικ ακυρώνει την λέξη που είχε πατηθεί έως τώρα
+        this.addMouseListener(new java.awt.event.MouseAdapter(){
+            public void mouseClicked(java.awt.event.MouseEvent evt){
+                if(evt.getButton() == MouseEvent.BUTTON3){
+                    displayMessage(0, "");
+                    LetterPanel.changePrevButton(-1);
+                    Score.resetWord();
+                    ResetPanels();
+                }
+            }
+        });
         if(StartGame==1){
            NewGame();
         }
@@ -270,64 +308,6 @@ public final class Play extends JFrame{
          wordsFoundLabel.setVerticalAlignment(JLabel.CENTER);
          progressPanel.add(wordsFoundLabel);
          
-         //Κουμπί υποβολής λέξης
-         sendWord.addActionListener((ActionEvent e) -> {
-             LetterPanel.changePrevButton(-1);
-             
-             //Περίπτωση όπου η λέξη έχει ήδη βρεθεί
-             if(a.checkIfWordFound(Score.returnWord()) == true){
-                 displayMessage(0,"Αυτή η λέξη έχει βρεθεί ήδη!");
-                 Score.resetWord();
-                 Score.resetScore();
-                 ResetPanels();
-             }
-             
-             else{
-                 //Περίπτωση όπου η λέξη υπάρχει
-                 if(Lexicon.doesWordExist(Score.returnWord()) == true){
-                     try {
-                         SoundEffects.correctWord();
-                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
-                         Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
-                     }
-                     if(Score.returnBlue()==true){
-                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
-                        +Score.returnWord()+" και έκανες "+Score.returnBlueScore() +" βήματα!");
-                         a.foundWord(Score.returnWord(), 2*Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
-                     }
-                     else{
-                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
-                        +Score.returnWord()+" και έκανες "+Score.returnScore() +" βήματα!");
-                         a.foundWord(Score.returnWord(), Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
-                     }
-                     
-                     
-                    updateProgressBar(a.returnPointsGathered(),a); //update στο progressbar
-                    updateWordsFoundLabel(a.returnNumberOfWordsFound());   
-                    if(a.returnPointsGathered()>=10){
-                            ProfileChooser.initGame(ProfileChooser.returnProfile());
-                            this.dispose();
-                    }
-                 
-                 }
-                 //Περίπτωση όπου η λέξη δεν υπάρχει
-                 else{
-                     try {
-                         SoundEffects.wrongWord();
-                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
-                         Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
-                     }
-                     displayMessage(1,"Δεν υπάρχει η λέξη "+Score.returnWord());
-                 }
-                 
-                 //reset των Πάνελ και των μεταβλητών που κρατάνε τα δεδομένα
-                 //της λέξης που σχηματίζεται
-                 Score.resetScore();
-                 Score.resetWord();
-                 Score.resetBlue();
-                 ResetPanels();
-             }
-         });
          //Τυχαία επιλογή αριθμού από μπαλαντέρ στο παιχνίδι
          int[] placeOfWilds;
          placeOfWilds = new int[returnRandom(0,4)];
@@ -442,14 +422,89 @@ public final class Play extends JFrame{
         }
         gamePanel.setBackground(Color.GRAY);
         
-        if(a.returnPointsGathered()>=10)
-            return; 
+        //Κουμπί υποβολής λέξης
+         sendWord.addActionListener((ActionEvent e) -> {
+             LetterPanel.changePrevButton(-1);
+             
+             //Περίπτωση όπου η λέξη έχει ήδη βρεθεί
+             if(a.checkIfWordFound(Score.returnWord()) == true){
+                 displayMessage(0,"Αυτή η λέξη έχει βρεθεί ήδη!");
+                 Score.resetWord();
+                 ResetPanels();
+             }
+             
+             else{
+                 //Περίπτωση όπου η λέξη υπάρχει
+                 if(Lexicon.doesWordExist(Score.returnWord()) == true){
+                     try {
+                         SoundEffects.correctWord();
+                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+                         Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                     if(Score.returnBlue()==true){
+                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                        +Score.returnWord()+" και έκανες "+Score.returnBlueScore() +" βήματα!");
+                         a.foundWord(Score.returnWord(), 2*Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
+                     }
+                     else{
+                         displayMessage(3,"Συγχαρητήρια! Βρήκες την λέξη "
+                        +Score.returnWord()+" και έκανες "+Score.returnScore() +" βήματα!");
+                         a.foundWord(Score.returnWord(), Score.returnScore()); //προσθήκη της λέξης στο σετ με αυτές που έχουν βρεθεί
+                     }
+                     
+                     
+                    updateProgressBar(a.returnPointsGathered(),a); //update στο progressbar
+                    updateWordsFoundLabel(a.returnNumberOfWordsFound());   
+                    if(a.returnPointsGathered()>=10){
+                            ProfileChooser.initGame(ProfileChooser.returnProfile());
+                            this.dispose();
+                    }
+                    changeWordPanels();
+                 
+                 }
+                 //Περίπτωση όπου η λέξη δεν υπάρχει
+                 else{
+                     try {
+                         SoundEffects.wrongWord();
+                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+                         Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                     displayMessage(1,"Δεν υπάρχει η λέξη "+Score.returnWord());
+                 }
+                 
+                 //reset των Πάνελ 
+                 ResetPanels();
+                 Score.resetWord();    
+             }
+         });
     }
     
+    protected static void changeWordPanels(){
+       
+        Letter chosenLetter;
+        int position;
+        for(int i=0; i<Score.returnWordPositionSize(); i++){
+            chosenLetter = RandomLetterChooser();
+            position = Score.returnWordPositionElement(i);
+            System.out.println(chosenLetter.ReturnLetter()+" "+position);
+            charPanels[position].removeAll();
+           // letterPanels[position]=null;
+            letterPanels[position] = new LetterPanel(position,chosenLetter.ReturnLetter(),
+                chosenLetter.ReturnLetterPoints(),1);
+            charLabels[position].setText(letterPanels[position].displayLetter());
+            pointLabels[position].setText(letterPanels[position].displayPoints());
+            charPanels[position].add(new JLabel());
+            charPanels[position].add(charLabels[position]);
+            charPanels[position].add(pointLabels[position]);
+            charPanels[position].add(new JLabel());
+            charPanels[position].addMouseListener(new LetterPanelListener(letterPanels[position]));
+        }
+        
+    }
     //Κάνει reset τα Panels στο σωστό τους χρώμα ( για χρήση μετά από λάθος επιλογή )
+    //και αλλάζει τα γράμματα σε περίπτωση που βρέθηκε λέξη
     protected static void ResetPanels(){
         
-        System.out.println(LetterPanel.returnPrevButton());
         for(int i=0; i < NUM; i++){
             charLabels[i].setText(letterPanels[i].displayLetter());
             pointLabels[i].setText(letterPanels[i].displayPoints());
@@ -474,7 +529,7 @@ public final class Play extends JFrame{
             //επειδή ήταν Μπαλαντέρ
             if(i==exWild){
                 charPanels[i].remove(charLabels[i]);
-                 pointLabels[i] = new JLabel(letterPanels[i].displayPoints());
+                pointLabels[i] = new JLabel(letterPanels[i].displayPoints());
                 pointLabels[i].setFont(new Font("Serif",Font.PLAIN, 14));
                 
                 charPanels[i].add(new JLabel());
@@ -570,7 +625,7 @@ public final class Play extends JFrame{
         99-100      ->      Ω  (2%)
         
     */
-    protected Letter RandomLetterChooser(){
+    protected static Letter RandomLetterChooser(){
      
         int randNum = returnRandom(1,100);
         
@@ -674,7 +729,7 @@ public final class Play extends JFrame{
     }
     
     //Επιστρέφει τυχαίο αριθμό από min έως max
-    protected int returnRandom(int min, int max){
+    protected static int returnRandom(int min, int max){
         Random rand = new Random();
         return rand.nextInt(max)+min;
     }
@@ -788,4 +843,19 @@ public final class Play extends JFrame{
     }
     
     
+    protected static String returnHelpString(){
+
+        return "Στόχος του παιχνιδιού είναι να κάνεις 200 βήματα και να ολοκληρώσεις το μονοπάτι. \n"
+                + " Κάθε γράμμα αντιστοιχεί σε έναν αριθμό βημάτων που αναγράφονται δίπλα από"
+                + " το γράμμα. \n Αν το γράμμα είναι κόκκινο τότε δίνει τα διπλάσια βήματα από"
+                + " ότι συνήθως.\n Αν το γράμμα είναι μπλε διπλασιάζει τα βήματα όλης της λέξης."
+                + " \n Κατά τον σχηματισμό λέξεων επιτρέπεται να επιλεχθούν μόνο γράμματα γειτονικά"
+                + " στο τελευταίο επιλεγμένο γράμμα. \n Καλή επιτυχία!";
+    }
+    
+    protected static String returnAboutString(){
+        return "Δημιουργοί :\n"
+                + " Δημήτρης Καραγεώργος 321/2017071\n"
+                + " Αναστάσιος Κουτσώνης 321/2018106";
+    }
 }

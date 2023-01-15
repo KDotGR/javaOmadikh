@@ -145,6 +145,6 @@ public class ProfileChooser extends JFrame implements ActionListener{
     }
     
     public static void initGame(Profile chosenProf){
-        Play play = new Play(chosenProf,1);
+         Play play = new Play(chosenProf,1);
     }
 }

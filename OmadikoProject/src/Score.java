@@ -1,3 +1,6 @@
+
+import java.util.ArrayList;
+
 /*
         Ονοματεπώνυμο                  ΑΜ
     Δημήτρης Καραγεώργος        321/2017071
@@ -9,19 +12,24 @@ public class Score {
     private static String word;
     private static boolean blue;
     
+    private static ArrayList <Integer> wordPosition;
+    
+    public static void initArrayList(){
+       wordPosition = new ArrayList<>();
+    }
+    
     public static void addScore(int points){
         score = score + points;
     }
     
-    public static void resetScore(){
-        score=0;
-    }
-    
-    public static void addChar(String s){
+    public static void addChar(String s,int pos){
         if(word==null)
             word = s;
+       
         else
             word=word+s;
+        
+        wordPosition.add(pos);
     }
     
     public static void addBlue(){
@@ -29,7 +37,10 @@ public class Score {
     }
     
     public static void resetWord(){
+        score = 0;
         word = null;
+        wordPosition.clear();
+        blue = false;
     }
     
     public static void resetBlue(){
@@ -51,4 +62,17 @@ public class Score {
     public static boolean returnBlue(){
         return blue;
     }
+    
+    public static boolean returnWordPositionisEmpty(){
+        return wordPosition.isEmpty();
+    }
+    
+    public static int returnWordPositionSize(){
+        return wordPosition.size();
+    }
+    
+    public static int returnWordPositionElement(int n){
+        return wordPosition.get(n);
+    }
+    
 }

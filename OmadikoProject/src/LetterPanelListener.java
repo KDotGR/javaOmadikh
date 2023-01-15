@@ -35,6 +35,7 @@ import javax.swing.JPanel;
               JPanel clickedBox =(JPanel)me.getSource();
               
                 try {
+                    System.out.println("click");
                     prevButton = LetterPanel.returnPrevButton();
                     //Το κλικ είναι έγκυρο μόνο αν ο χρήστης πατήσει γειτνιακό πάνελ
                     //η δεν έχει πατήσει πάνελ προηγουμένως
@@ -55,26 +56,32 @@ import javax.swing.JPanel;
                             clickedBox.setBackground(Color.YELLOW);
                             LetterPanel.changePrevButton(position);
                             Score.addScore(letterPanel.returnPoints());
-                            Score.addChar(letterPanel.displayLetter());
+                            Score.addChar(letterPanel.displayLetter(),letterPanel.returnPosition());
                         }
                         
                         //Περίπτωση όπου το πάνελ που επιλέχθηκε είναι μπαλαντέρ
                         else{
                             int option =Play.WildLetterChooser();
                             letterPanel.WildChanger(Play.ReturnLetterArray(option));
-                            Score.resetScore();
                             Score.resetWord();
                             LetterPanel.changePrevButton(-1);
                             Play.ResetPanels(letterPanel.position);
                         }
                     }
                     
+                    //Περίπτωση όπου το πάνελ που επιλέχθηκε είναι ίδιο με το
+                    //προηγούμενο
+                    else if(prevButton == position ){
+                        Play.displayMessage(0, "");
+                        LetterPanel.changePrevButton(-1);
+                        Score.resetWord();
+                        Play.ResetPanels();
+                    }
                     //Περίπτωση όπου το πάνελ που επιλέχθηκε δεν είναι έγκυρο
                     else{
                         SoundEffects.wrongChoiceSound();
                         Play.displayMessage(1, "Τα γράμματα που επιλέγεις πρέπει να είναι γειτονικά");
                         LetterPanel.changePrevButton(-1);
-                        Score.resetScore();
                         Score.resetWord();
                         Play.ResetPanels();
                     }
