@@ -57,17 +57,23 @@ public final class Play extends JFrame{
     private JLabel wordsFoundLabel;
     
     private static JButton sendWord;
+    private static JButton shuffleLine;
     private static JProgressBar progressBar;
     private static final int gameRows = 8;
     private static final int gameCols = 8;
     private static final int NUM = gameRows * gameCols;
-    private static  JPanel[] charPanels = new JPanel[NUM];
-    private static  JLabel[] charLabels = new JLabel[NUM];
-    private static  JLabel[] pointLabels = new JLabel [NUM];
+    private static  JPanel[] charPanels;
+    private static  JLabel[] charLabels;
+    private static  JLabel[] pointLabels;
     
-    private static LetterPanel[] letterPanels = new LetterPanel [NUM];
+    private static LetterPanel[] letterPanels;
     
     Play(Profile profile,int StartGame){
+        
+        charPanels = new JPanel[NUM];
+        charLabels = new JLabel[NUM];
+        pointLabels = new JLabel [NUM];
+        letterPanels = new LetterPanel [NUM];
         
         //Βασικά χαρακτηριστικά και λειτουργίες του Frame
         this.setTitle("Το Μονοπάτι των Λέξεων"); //Όνομα εφαρμογής
@@ -149,7 +155,7 @@ public final class Play extends JFrame{
         mainCenterPanel.setPreferredSize(new Dimension(100,40));
         
         //message Panel
-        messagePanel.setBackground(Color.MAGENTA);
+        //messagePanel.setBackground(Color.MAGENTA);
         messagePanel.setPreferredSize(new Dimension(100,40));
 
         //Game Panel
@@ -159,11 +165,17 @@ public final class Play extends JFrame{
         selectionandProgressPanel.setPreferredSize(new Dimension(600,40));
         
         //Selection Panel
-        selectionsPanel.setBackground(Color.green);
+        selectionsPanel.setBackground(Color.GRAY);
         selectionsPanel.setPreferredSize(new Dimension(100,40));
         
+        shuffleLine = new JButton("Αναδιάταξη Γραμμής");
+        shuffleLine.setFocusable(false);
+        shuffleLine.setFont(new Font("Verdana",Font.BOLD,25));
+        selectionsPanel.add(shuffleLine);
+        
         //Progress Panel
-        progressPanel.setBackground(Color.cyan);
+        progressPanel.setBackground(Color.GRAY);
+        progressPanel.setForeground(Color.WHITE);
         progressPanel.setPreferredSize(new Dimension(100,40));
         
        
@@ -218,7 +230,6 @@ public final class Play extends JFrame{
         menu.add(endGame);
         
          //Επιλογή Αλλαγή Προφίλ
-        //changeProfile = new JMenuItem("Αλλαγή Προφίλ",new ImageIcon("images/user.png")); //via https://www.freepik.com
         changeProfile = new JMenuItem(new AbstractAction("Αλλαγή Προφίλ",new ImageIcon("images/user.png")) { //via https://www.freepik.com
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -238,8 +249,14 @@ public final class Play extends JFrame{
         searchWordFile = new JMenuItem("Αναζήτηση αρχείου λέξεων",new ImageIcon("images/search.png")); //via https://www.flaticon.com/authors/dimitry-miroliubov
         menu.add(searchWordFile);
         
-        //Επιλογή Αναζήτηση αρχείου λέξεων
-        exit = new JMenuItem("Έξοδος",new ImageIcon("images/exit.png")); //via https://www.flaticon.com/authors/wr-graphic-garage
+        //Επιλογή Εξόδου από το παιχνίδι
+        exit = new JMenuItem(new AbstractAction("Έξοδος",new ImageIcon("images/exit.png")) { //via https://www.flaticon.com/authors/wr-graphic-garage
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
+});
+        
         menu.add(exit);
         
         //Προσθήκη του Μενού στο menu bar
@@ -797,11 +814,6 @@ public final class Play extends JFrame{
             default -> messagePanel.setBackground(Color.green);
         }
     }
-   /* protected void updateProgressBar(int value){
-        progressBar.setValue(value);
-        progressBar.setString("Βήματα: "+value+"/200");
-    }  
-    */
     
     //Ενημερώνει το progressbar με την τιμή value
     protected void updateProgressBar(int value,FoundWords a){

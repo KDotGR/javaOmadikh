@@ -5,9 +5,8 @@
  */
 
 public abstract class Shuffler {
-    Shuffler(){
-        
-    }
+    int min;
+    int max;
     
     
 }
