@@ -75,4 +75,8 @@ public class LetterPanel {
     public static int returnPrevButton(){
         return prevButton;
     }
+    
+    public void changePosition(int pos){
+        position = pos;
+    }
 }

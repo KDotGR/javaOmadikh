@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
  
@@ -57,7 +58,18 @@ public final class Play extends JFrame{
     private JLabel wordsFoundLabel;
     
     private static JButton sendWord;
+    
     private static JButton shuffleLine;
+    private static JButton shuffleColumn;
+    private static JButton shuffleEverything;
+    private static JButton deleteLine;
+    private static JButton swapLetters;
+    private JLabel shuffleLineLeft;
+    private JLabel shuffleColumnLeft;
+    private JLabel shuffleEverythingLeft;
+    private JLabel deleteLineLeft;
+    private JLabel swapLettersLeft;
+    
     private static JProgressBar progressBar;
     private static final int gameRows = 8;
     private static final int gameCols = 8;
@@ -106,12 +118,12 @@ public final class Play extends JFrame{
         
         //Ορισμούς του layout κάθε panel
         mainCenterPanel.setLayout(new GridLayout(1,2));
-        
+        //selectionsPanel.setLayout(new GridLayout(5,2));
+         selectionsPanel.setLayout(new GridLayout(5,2,9,9));
         SendButtonSelandProgPanel.setLayout(new BorderLayout());
-        selectionandProgressPanel.setLayout(new GridLayout(2,1));
+        selectionandProgressPanel.setLayout(new GridLayout(2,1,7,7));
         gamePanel.setLayout(new GridLayout(gameRows,gameCols,6,6));
         infoPanel.setLayout(new BorderLayout());
-        selectionsPanel.setLayout(new BorderLayout());
         progressPanel.setLayout(new BorderLayout());
         messagePanel.setLayout(new BorderLayout());
         
@@ -171,7 +183,48 @@ public final class Play extends JFrame{
         shuffleLine = new JButton("Αναδιάταξη Γραμμής");
         shuffleLine.setFocusable(false);
         shuffleLine.setFont(new Font("Verdana",Font.BOLD,25));
+        shuffleLine.setPreferredSize(new Dimension(100,100));
+        shuffleLine.setBorder(BorderFactory.createEmptyBorder(0, 9, 0, 0));
         selectionsPanel.add(shuffleLine);
+        
+        shuffleLineLeft = new JLabel();
+        selectionsPanel.add(shuffleLineLeft);
+        
+        shuffleColumn = new JButton("Αναδιάταξη Στήλης");
+        shuffleColumn.setFocusable(false);
+        shuffleColumn.setFont(new Font("Verdana",Font.BOLD,25));
+        shuffleColumn.setMinimumSize(new Dimension(100,100));
+        selectionsPanel.add(shuffleColumn);
+        
+        shuffleColumnLeft = new JLabel();
+        selectionsPanel.add(shuffleColumnLeft);
+        
+        shuffleEverything = new JButton("Αναδιάταξη Ταμπλό");
+        shuffleEverything.setFocusable(false);
+        shuffleEverything.setFont(new Font("Verdana",Font.BOLD,25));
+        shuffleEverything.setPreferredSize(new Dimension(100,100));
+        selectionsPanel.add(shuffleEverything);
+        
+        shuffleEverythingLeft = new JLabel();
+        selectionsPanel.add(shuffleEverythingLeft);
+        
+        deleteLine = new JButton("Διαγραφή Γραμμής");
+        deleteLine.setFocusable(false);
+        deleteLine.setFont(new Font("Verdana",Font.BOLD,25));
+        deleteLine.setPreferredSize(new Dimension(100,100));
+        selectionsPanel.add(deleteLine);
+        
+        deleteLineLeft = new JLabel();
+        selectionsPanel.add(deleteLineLeft);
+        
+        swapLetters = new JButton("Εναλλαγή Γραμμάτων");
+        swapLetters.setFocusable(false);
+        swapLetters.setFont(new Font("Verdana",Font.BOLD,25));
+        swapLetters.setPreferredSize(new Dimension(100,100));
+        selectionsPanel.add(swapLetters);
+        
+        swapLettersLeft = new JLabel();
+        selectionsPanel.add(swapLettersLeft);
         
         //Progress Panel
         progressPanel.setBackground(Color.GRAY);
@@ -303,6 +356,20 @@ public final class Play extends JFrame{
                 }
             }
         });
+        /*
+       //Σε δεξί κλικ ακυρώνει την λέξη που είχε πατηθεί έως τώρα
+        shuffleLine.addMouseListener(new java.awt.event.MouseAdapter(){
+            public void mouseClicked(java.awt.event.MouseEvent evt){
+                String[] options = {"1","2","3","4","5","6","7","8"};
+                int a = JOptionPane.showOptionDialog(null,
+                "Διάλεξε την γραμμή που θα αναταγεί",
+                "Ανάταξη Γραμμής",JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,null, options , null);
+                System.out.println("row "+a);
+                rowShuffle(a);
+            }
+        });
+        */
         if(StartGame==1){
            NewGame();
         }
@@ -439,6 +506,8 @@ public final class Play extends JFrame{
         }
         gamePanel.setBackground(Color.GRAY);
         
+        
+        
         //Κουμπί υποβολής λέξης
          sendWord.addActionListener((ActionEvent e) -> {
              LetterPanel.changePrevButton(-1);
@@ -494,6 +563,18 @@ public final class Play extends JFrame{
                  Score.resetWord();    
              }
          });
+         
+         shuffleLine.addMouseListener(new java.awt.event.MouseAdapter(){
+            public void mouseClicked(java.awt.event.MouseEvent evt){
+                String[] options = {"1","2","3","4","5","6","7","8"};
+                int a = JOptionPane.showOptionDialog(null,
+                "Διάλεξε την γραμμή που θα αναταγεί",
+                "Ανάταξη Γραμμής",JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,null, options , null);
+                System.out.println("row "+a);
+                rowShuffle(a);
+            }
+        });
     }
     
     protected static void changeWordPanels(){
@@ -514,7 +595,8 @@ public final class Play extends JFrame{
             charPanels[position].add(charLabels[position]);
             charPanels[position].add(pointLabels[position]);
             charPanels[position].add(new JLabel());
-            charPanels[position].addMouseListener(new LetterPanelListener(letterPanels[position]));
+            charPanels[position].updateUI();
+            //charPanels[position].addMouseListener(new LetterPanelListener(letterPanels[position]));
         }
         
     }
@@ -832,9 +914,7 @@ public final class Play extends JFrame{
                 pointLabels[i] = null;
                 charLabels[i] = null;
             }
-            //for(int i=0; i<wordsFoundLabel.length; i++)
 
-            //selectionsPanel = null;
             gamePanel.removeAll();
             progressBar.setValue(0);
             updateWordsFoundLabel(0);
@@ -849,14 +929,66 @@ public final class Play extends JFrame{
         System.out.println("found "+value);
     }
     
+    //Ενημερώνει το πεδίο των Νικών-Ηττών-Σερί του παίκτη
     protected static void updateInfoLabel(Profile profile){
         infoLabel.setText("Νίκες: "+profile.showWins()+"  Ήττες: "+profile.showLosses()
             +"  Σερί: "+profile.showStreak());
     }
     
+    //Επιλογή Αναδιάταξη γραμμής
+    protected static void rowShuffle(int row){
+        int[] newNumbers = new int[8];
+                newNumbers = RowShuffler.rowShuffle(row);
+        switch (row) {
+            case 0:
+                Switcharoo(0,8,newNumbers);
+                break;
+            case 1:
+                Switcharoo(8,16,newNumbers);
+                break;
+            case 2:
+                Switcharoo(16,24,newNumbers);
+                break;
+            case 3:
+                Switcharoo(24,32,newNumbers);
+                break;
+            case 4:
+                Switcharoo(32,40,newNumbers);
+                break;
+            case 5:
+                Switcharoo(40,48,newNumbers);
+                break;
+            case 6:
+                Switcharoo(48,56,newNumbers);
+                break;
+            default:
+                Switcharoo(56,64,newNumbers);
+                break;
+        }
+        
+    }
     
+    //Υλοποιεί την αντικατάσταση των λέξεων στα πάνελ
+    public static void Switcharoo(int min, int max,int[] newNumbers){
+        LetterPanel temp1;
+        for(int i=min; i<max; i++){
+            charPanels[i].removeAll();
+            //System.out.println(newNumbers[i%8]);
+            temp1 = letterPanels[newNumbers[i%8]];
+            letterPanels[i].changePosition(newNumbers[i%8]);
+            letterPanels[newNumbers[i%8]] = letterPanels[i];
+            letterPanels[i] = temp1;
+            System.out.println(letterPanels[i].returnPosition());
+            charLabels[i].setText(letterPanels[i].displayLetter());
+            pointLabels[i].setText(letterPanels[i].displayPoints());
+            charPanels[i].add(charLabels[i]);
+            charPanels[i].add(pointLabels[i]);
+            charPanels[i].updateUI();
+        }
+    }
+    
+    //Επιστρέφει το κείμενο για την επιλογή Βοήθεια
     protected static String returnHelpString(){
-
         return "Στόχος του παιχνιδιού είναι να κάνεις 200 βήματα και να ολοκληρώσεις το μονοπάτι. \n"
                 + " Κάθε γράμμα αντιστοιχεί σε έναν αριθμό βημάτων που αναγράφονται δίπλα από"
                 + " το γράμμα. \n Αν το γράμμα είναι κόκκινο τότε δίνει τα διπλάσια βήματα από"
@@ -865,6 +997,7 @@ public final class Play extends JFrame{
                 + " στο τελευταίο επιλεγμένο γράμμα. \n Καλή επιτυχία!";
     }
     
+    //Επιστρέφει το κείμενο για την επιλογή Πληροφορίες
     protected static String returnAboutString(){
         return "Δημιουργοί :\n"
                 + " Δημήτρης Καραγεώργος 321/2017071\n"

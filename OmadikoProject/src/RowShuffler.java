@@ -1,43 +1,48 @@
 
 import java.util.Random;
 
-
+//Κλάση που υλοποιεί το shuffle γραμμής
 public class RowShuffler extends Shuffler{
-    protected static int[] newNumbers;
+    //public int[] newNumbers;
     
-    public void rowShuffle(int row){
+    public static int[] rowShuffle(int row){
         
         Random rand = new Random();
+        int[] newNumbers = new int[8];
+        for(int i=0; i<newNumbers.length; i++)
+            newNumbers[i]=-1;
         switch (row) {
             case 0:
-                doTheShuffle(0,8);
+                doTheShuffle(0,8,newNumbers);
                 break;
             case 1:
-                doTheShuffle(8,16);
+                doTheShuffle(8,16,newNumbers);
                 break;
             case 2:
-                doTheShuffle(16,24);
+                doTheShuffle(16,24,newNumbers);
                 break;
             case 3:
-                doTheShuffle(24,32);
+                doTheShuffle(24,32,newNumbers);
                 break;
             case 4:
-                doTheShuffle(32,40);
+                doTheShuffle(32,40,newNumbers);
                 break;
             case 5:
-                doTheShuffle(40,48);
+                doTheShuffle(40,48,newNumbers);
                 break;
             case 6:
-                doTheShuffle(48,56);
+                doTheShuffle(48,56,newNumbers);
                 break;
             default:
-                doTheShuffle(56,64);
+                doTheShuffle(56,64,newNumbers);
                 break;
         }
+        return newNumbers;
     }
     
-    public void doTheShuffle(int min, int max){
-        newNumbers = new int[8];
+    //Επιστρέφει πίνακα 8 θέσεων με τυχαίες τις θέσεις των γραμμάτων
+    public static int[] doTheShuffle(int min, int max,int[] newNumbers){
+        
         Random rand = new Random();
         int num;
         for(int i=min; i<max; i++){
@@ -46,8 +51,11 @@ public class RowShuffler extends Shuffler{
             while(newNumbers[num%8]!=-1){
                 num=rand.nextInt(max)+min;    
             }
-            newNumbers[num%8] = num;
+            newNumbers[num%8] = i;
+            //System.out.println(newNumbers[num%8]);
+            //System.out.println("this finished");
         }
+        return newNumbers;
     }
 }
                                                                               
