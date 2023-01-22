@@ -1,12 +1,13 @@
-
-import java.util.ArrayList;
-
 /*
         Ονοματεπώνυμο                  ΑΜ
     Δημήτρης Καραγεώργος        321/2017071
     Αναστάσιος Κουτσώνης        321/2018106
  */
 
+import java.util.ArrayList;
+
+
+//Κρατάει το score της εκάστωτε λέξης που σχηματίζει ο χρήστης
 public class Score {
     private static int score;
     private static String word;

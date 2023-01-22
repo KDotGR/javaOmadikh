@@ -6,6 +6,8 @@
  */
 import java.util.Random;
 
+
+//abstract κλάση, χρησιμοποιούνται μόνο οι κλάσεις που την κληρονομούν
 public abstract class Shuffler {
     Random rand = new Random();
 }

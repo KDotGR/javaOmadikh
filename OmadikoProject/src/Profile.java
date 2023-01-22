@@ -3,6 +3,8 @@
     Δημήτρης Καραγεώργος        321/2017071
     Αναστάσιος Κουτσώνης        321/2018106
  */
+
+//Αποθηκεύει το προφίλ του παίκτη
 public class Profile {
     private String name;
     private int wins;

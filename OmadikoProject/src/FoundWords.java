@@ -7,6 +7,7 @@
 
 import java.util.HashSet;
 
+//Αποθηκεύει τα δεδομένα των λέξεων που έχουν βρεθεί
 public class FoundWords {
     
     protected int numberOfWordsFound;

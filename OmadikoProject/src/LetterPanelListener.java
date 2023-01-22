@@ -49,6 +49,7 @@ import javax.swing.JPanel;
                             Play.ResetPanels();
                             swapMode = false;
                             letterPanel.changePrevButton(-1);
+                            Play.displayMessage(0,"");
                             return;
                         }
                         LetterPanel.changePrevButton(position);
