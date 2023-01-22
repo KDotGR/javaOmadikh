@@ -5,8 +5,4 @@
  */
 
 public abstract class Shuffler {
-    int min;
-    int max;
-    
-    
 }

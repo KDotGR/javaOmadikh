@@ -4,8 +4,9 @@ import java.util.Random;
 //Κλάση που υλοποιεί το shuffle γραμμής
 public class RowShuffler extends Shuffler{
     //public int[] newNumbers;
+    private static int counter;
     
-    public static int[] rowShuffle(int row){
+    public static int[] rowShuffle(int row) {
         
         Random rand = new Random();
         int[] newNumbers = new int[8];
@@ -52,10 +53,21 @@ public class RowShuffler extends Shuffler{
                 num=rand.nextInt(max)+min;    
             }
             newNumbers[num%8] = i;
-            //System.out.println(newNumbers[num%8]);
-            //System.out.println("this finished");
         }
         return newNumbers;
     }
+    
+    public static void updateCounter(){
+        counter++;
+    }
+    
+    public static void initCounter(){
+        counter=0;
+    }
+    
+    public static int returnCounter(){
+        return counter;
+    }
+    
 }
                                                                               
