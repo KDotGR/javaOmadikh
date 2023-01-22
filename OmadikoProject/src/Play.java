@@ -313,7 +313,14 @@ public final class Play extends JFrame{
         menu.add(settings);
         
         //Επιλογή Αναζήτηση αρχείου λέξεων
-        searchWordFile = new JMenuItem("Αναζήτηση αρχείου λέξεων",new ImageIcon("images/search.png")); //via https://www.flaticon.com/authors/dimitry-miroliubov
+        searchWordFile = new JMenuItem(new AbstractAction("Αναζήτηση αρχείου λέξεων",new ImageIcon("images/search.png")) { //via https://www.flaticon.com/authors/dimitry-miroliubov
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        ProfileChooser.initGame(profile);
+        Lexicon.LexiconCreator(1);
+        dispose();
+        }
+});
         menu.add(searchWordFile);
         
         //Επιλογή Εξόδου από το παιχνίδι
