@@ -1,14 +1,12 @@
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /*
        Ονοματεπώνυμο                  ΑΜ
     Δημήτρης Καραγεώργος        321/2017071
     Αναστάσιος Κουτσώνης        321/2018106
 */
-
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //Επιστρέφει shuffled πίνακα των στοιχείων
 public class ColumnShuffler extends Shuffler{

@@ -25,9 +25,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractAction;
@@ -382,9 +386,11 @@ public final class Play extends JFrame{
          FoundWords a = new FoundWords();
          Score.resetBlue();
          
+         //Αρχικοποίηση των counter για τις βοήθειες
          RowShuffler.initCounter();
          ColumnShuffler.initCounter();
-         //updateWordsFoundLabel(0);
+         ShuffleTable.initCounter();
+         
          wordsFoundLabel.setFont(new Font("Sans",Font.PLAIN,30));
          wordsFoundLabel.setHorizontalAlignment(JLabel.CENTER);
          wordsFoundLabel.setVerticalAlignment(JLabel.CENTER);
@@ -599,6 +605,22 @@ public final class Play extends JFrame{
                 }
                 else
                     shuffleColumnLeft.setText(ColumnShuffler.returnCounter()+"/3");
+            }
+        });
+        
+        shuffleEverything.addMouseListener(new java.awt.event.MouseAdapter(){
+            public void mouseClicked(java.awt.event.MouseEvent evt){
+       
+                tableShuffle();
+                ShuffleTable.updateCounter();
+                if(ShuffleTable.returnCounter()>=5){
+                    shuffleEverything.setVisible(false);
+                    shuffleEverythingLeft.setText("Έχεις χρησιμοποιήσει όλες τις διαθέσιμες"
+                            + " αναδιατάξεις ταμπλό!");
+                    shuffleEverythingLeft.setFont(new Font("Verdana",Font.BOLD,14));
+                }
+                else
+                    shuffleEverythingLeft.setText(ColumnShuffler.returnCounter()+"/5");
             }
         });
     }
@@ -1027,17 +1049,32 @@ public final class Play extends JFrame{
         ResetPanels();
     }
     
+    //Υλοποιεί το shuffle των λέξεων στο ταμπλό
+    protected static void tableShuffle(){
+        int[] newNumbers = new int[64];
+        LetterPanel temp1;
+        for(int i=0; i<64; i++){
+            charPanels[i].removeAll();
+            temp1 = letterPanels[newNumbers[i]];
+            letterPanels[newNumbers[i]] = letterPanels[i];
+            letterPanels[i] = temp1;
+            charLabels[i].setText(letterPanels[i].displayLetter());
+            pointLabels[i].setText(letterPanels[i].displayPoints());
+            charPanels[i].add(charLabels[i]);
+            charPanels[i].add(pointLabels[i]);
+            charPanels[i].updateUI();
+        }
+    }
+    
     //Υλοποιεί την αντικατάσταση των λέξεων στα πάνελ --- για shuffle στήλης
     public static void Switcharoo(int start, int[] newNumbers){
         LetterPanel temp1;
         for(int i=start; i<(start+57); i+=8){
             charPanels[i].removeAll();
-            //System.out.println(newNumbers[i%8]);
             temp1 = letterPanels[newNumbers[i%8]];
             letterPanels[i].changePosition(newNumbers[i%8]);
             letterPanels[newNumbers[i%8]] = letterPanels[i];
             letterPanels[i] = temp1;
-            System.out.println(letterPanels[i].returnPosition());
             charLabels[i].setText(letterPanels[i].displayLetter());
             pointLabels[i].setText(letterPanels[i].displayPoints());
             charPanels[i].add(charLabels[i]);
