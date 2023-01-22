@@ -1064,6 +1064,7 @@ public final class Play extends JFrame{
             charPanels[i].add(pointLabels[i]);
             charPanels[i].updateUI();
         }
+        ResetPanels();
     }
     
     //Υλοποιεί την αντικατάσταση των λέξεων στα πάνελ --- για shuffle στήλης
