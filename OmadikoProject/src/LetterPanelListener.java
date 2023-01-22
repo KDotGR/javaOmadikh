@@ -22,7 +22,8 @@ import javax.swing.JPanel;
         protected LetterPanel letterPanel;
         protected int prevButton;
         protected int position;
-        
+        protected static boolean swapMode;
+        protected static int counter;
         LetterPanelListener(LetterPanel letterPanel){
             this.letterPanel = letterPanel;
             this.position = letterPanel.returnPosition();
@@ -37,6 +38,23 @@ import javax.swing.JPanel;
                 try {
                     System.out.println("click");
                     prevButton = LetterPanel.returnPrevButton();
+                    
+                    if(swapMode==true){
+                        SoundEffects.clickSound();
+                        clickedBox.setBackground(Color.YELLOW);
+                        counter++;
+                        if(counter==2){
+                            Play.letterSwap(prevButton,position);
+                            counter = 0;
+                            Play.ResetPanels();
+                            swapMode = false;
+                            letterPanel.changePrevButton(-1);
+                            return;
+                        }
+                        LetterPanel.changePrevButton(position);
+                        return;
+                    }
+                    
                     //Το κλικ είναι έγκυρο μόνο αν ο χρήστης πατήσει γειτνιακό πάνελ
                     //η δεν έχει πατήσει πάνελ προηγουμένως
                     if(prevButton == -1 || prevButton == position-9 
@@ -90,5 +108,17 @@ import javax.swing.JPanel;
                 } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
                     Logger.getLogger(LetterPanelListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
+        }
+        
+        public static void enableSwapMode(){
+            swapMode = true;
+        }
+        
+        public static void initSwapMode(){
+            swapMode = false;
+        }
+        
+        public static void initCounter(){
+            counter = 0;
         }
     }

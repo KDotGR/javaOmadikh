@@ -391,6 +391,9 @@ public final class Play extends JFrame{
          ColumnShuffler.initCounter();
          ShuffleTable.initCounter();
          LineDeleter.initCounter();
+         LetterSwapper.initCounter();
+         LetterPanelListener.initSwapMode();
+         LetterPanelListener.initCounter();
          
          wordsFoundLabel.setFont(new Font("Sans",Font.PLAIN,30));
          wordsFoundLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -641,6 +644,22 @@ public final class Play extends JFrame{
                 }
                 else
                     deleteLineLeft.setText(LineDeleter.returnCounter()+"/3");
+            }
+        });
+        
+        swapLetters.addMouseListener(new java.awt.event.MouseAdapter(){
+            public void mouseClicked(java.awt.event.MouseEvent evt){
+                displayMessage(0,"Διάλεξε τα γράμματα που θες να εναλλαγούν");
+                LetterPanelListener.enableSwapMode();
+                LetterSwapper.updateCounter();
+                if(LetterSwapper.returnCounter()>=6){
+                    swapLetters.setVisible(false);
+                    swapLettersLeft.setText("Έχεις χρησιμοποιήσει όλες τις διαθέσιμες"
+                            + " εναλλαγές γραμμάτων!");
+                    swapLettersLeft.setFont(new Font("Verdana",Font.BOLD,14));
+                }
+                else
+                    swapLettersLeft.setText(LetterSwapper.returnCounter()+"/6");
             }
         });
     }
@@ -1079,8 +1098,10 @@ public final class Play extends JFrame{
             letterPanels[i] = temp1;
             charLabels[i].setText(letterPanels[i].displayLetter());
             pointLabels[i].setText(letterPanels[i].displayPoints());
+            charPanels[i].add(new JLabel());
             charPanels[i].add(charLabels[i]);
             charPanels[i].add(pointLabels[i]);
+            charPanels[i].add(new JLabel());
             charPanels[i].updateUI();
         }
         ResetPanels();
@@ -1096,10 +1117,39 @@ public final class Play extends JFrame{
                     newLetter.ReturnLetterPoints(),1);
             charLabels[i].setText(letterPanels[i].displayLetter());
             pointLabels[i].setText(letterPanels[i].displayPoints());
+            charPanels[i].add(new JLabel());
             charPanels[i].add(charLabels[i]);
             charPanels[i].add(pointLabels[i]);
+            charPanels[i].add(new JLabel());
             charPanels[i].updateUI();
         }
+        ResetPanels();
+    }
+    
+    //Υλοποιεί την εναλλαγή γραμμάτων
+    protected static void letterSwap(int pos1, int pos2){
+        LetterPanel temp;
+        charPanels[pos1].removeAll();
+        temp = letterPanels[pos1];
+        letterPanels[pos1] = letterPanels[pos2];
+        letterPanels[pos2] = temp;
+        
+        charLabels[pos1].setText(letterPanels[pos1].displayLetter());
+        pointLabels[pos1].setText(letterPanels[pos1].displayPoints());
+        charPanels[pos1].add(new JLabel());
+        charPanels[pos1].add(charLabels[pos1]);
+        charPanels[pos1].add(pointLabels[pos1]);
+        charPanels[pos1].add(new JLabel());
+        charPanels[pos1].updateUI();
+        
+        charPanels[pos2].removeAll();
+        charLabels[pos2].setText(letterPanels[pos2].displayLetter());
+        pointLabels[pos2].setText(letterPanels[pos2].displayPoints());
+        charPanels[pos2].add(new JLabel());
+        charPanels[pos2].add(charLabels[pos2]);
+        charPanels[pos2].add(pointLabels[pos2]);
+        charPanels[pos2].add(new JLabel());
+        charPanels[pos2].updateUI();
         ResetPanels();
     }
     
