@@ -390,6 +390,7 @@ public final class Play extends JFrame{
          RowShuffler.initCounter();
          ColumnShuffler.initCounter();
          ShuffleTable.initCounter();
+         LineDeleter.initCounter();
          
          wordsFoundLabel.setFont(new Font("Sans",Font.PLAIN,30));
          wordsFoundLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -571,7 +572,7 @@ public final class Play extends JFrame{
          shuffleLine.addMouseListener(new java.awt.event.MouseAdapter(){
             public void mouseClicked(java.awt.event.MouseEvent evt){
                 String[] options = {"1","2","3","4","5","6","7","8"};
-                int a = JOptionPane.showOptionDialog(null,
+                int a = JOptionPane.showOptionDialog(progressPanel,
                 "Διάλεξε την γραμμή που θα αναδιαταγεί",
                 "Αναδιάταξη Γραμμής",JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,null, options , null);
@@ -591,7 +592,7 @@ public final class Play extends JFrame{
         shuffleColumn.addMouseListener(new java.awt.event.MouseAdapter(){
             public void mouseClicked(java.awt.event.MouseEvent evt){
                 String[] options = {"1","2","3","4","5","6","7","8"};
-                int a = JOptionPane.showOptionDialog(null,
+                int a = JOptionPane.showOptionDialog(progressPanel,
                 "Διάλεξε την στήλη που θα αναδιαταγεί",
                 "Αναδιάταξη Στήλης",JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,null, options , null);
@@ -610,7 +611,6 @@ public final class Play extends JFrame{
         
         shuffleEverything.addMouseListener(new java.awt.event.MouseAdapter(){
             public void mouseClicked(java.awt.event.MouseEvent evt){
-       
                 tableShuffle();
                 ShuffleTable.updateCounter();
                 if(ShuffleTable.returnCounter()>=5){
@@ -623,8 +623,29 @@ public final class Play extends JFrame{
                     shuffleEverythingLeft.setText(ColumnShuffler.returnCounter()+"/5");
             }
         });
+        
+        deleteLine.addMouseListener(new java.awt.event.MouseAdapter(){
+            public void mouseClicked(java.awt.event.MouseEvent evt){
+                String[] options = {"1","2","3","4","5","6","7","8"};
+                int a = JOptionPane.showOptionDialog(progressPanel,
+                "Διάλεξε την γραμμή που θα διαγραφεί",
+                "Διαγραφή Γραμμής",JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,null, options , null);
+                lineDeleter(a);
+                LineDeleter.updateCounter();
+                if(LineDeleter.returnCounter()>=3){
+                    deleteLine.setVisible(false);
+                    deleteLineLeft.setText("Έχεις χρησιμοποιήσει όλες τις διαθέσιμες"
+                            + " διαγραφές γραμμής!");
+                    deleteLineLeft.setFont(new Font("Verdana",Font.BOLD,14));
+                }
+                else
+                    deleteLineLeft.setText(LineDeleter.returnCounter()+"/3");
+            }
+        });
     }
     
+    //Αλλάζει τα γράμματα στις θέσεις όπου βρέθηκε η λέξη
     protected static void changeWordPanels(){
        
         Letter chosenLetter;
@@ -644,9 +665,7 @@ public final class Play extends JFrame{
             charPanels[position].add(pointLabels[position]);
             charPanels[position].add(new JLabel());
             charPanels[position].updateUI();
-            //charPanels[position].addMouseListener(new LetterPanelListener(letterPanels[position]));
         }
-        
     }
     //Κάνει reset τα Panels στο σωστό τους χρώμα ( για χρήση μετά από λάθος επιλογή )
     //και αλλάζει τα γράμματα σε περίπτωση που βρέθηκε λέξη
@@ -1058,6 +1077,23 @@ public final class Play extends JFrame{
             temp1 = letterPanels[newNumbers[i]];
             letterPanels[newNumbers[i]] = letterPanels[i];
             letterPanels[i] = temp1;
+            charLabels[i].setText(letterPanels[i].displayLetter());
+            pointLabels[i].setText(letterPanels[i].displayPoints());
+            charPanels[i].add(charLabels[i]);
+            charPanels[i].add(pointLabels[i]);
+            charPanels[i].updateUI();
+        }
+        ResetPanels();
+    }
+    
+    //Υλοποιεί την διαγραφή γραμμής
+    protected static void lineDeleter(int line){
+        Letter newLetter;
+        for(int i=0+(line*8); i<8+(line*8); i++){
+            charPanels[i].removeAll();
+            newLetter = RandomLetterChooser();
+            letterPanels[i] = new LetterPanel(i,newLetter.ReturnLetter(),
+                    newLetter.ReturnLetterPoints(),1);
             charLabels[i].setText(letterPanels[i].displayLetter());
             pointLabels[i].setText(letterPanels[i].displayPoints());
             charPanels[i].add(charLabels[i]);
