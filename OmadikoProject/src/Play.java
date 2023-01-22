@@ -382,6 +382,8 @@ public final class Play extends JFrame{
          FoundWords a = new FoundWords();
          Score.resetBlue();
          
+         RowShuffler.initCounter();
+         ColumnShuffler.initCounter();
          //updateWordsFoundLabel(0);
          wordsFoundLabel.setFont(new Font("Sans",Font.PLAIN,30));
          wordsFoundLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -587,16 +589,16 @@ public final class Play extends JFrame{
                 "Διάλεξε την στήλη που θα αναδιαταγεί",
                 "Αναδιάταξη Στήλης",JOptionPane.DEFAULT_OPTION,
                 JOptionPane.PLAIN_MESSAGE,null, options , null);
-                ColumnShuffle(a);
-                RowShuffler.updateCounter();
-                if(RowShuffler.returnCounter()>=3){
-                    shuffleLine.setVisible(false);
-                    shuffleLineLeft.setText("Έχεις χρησιμοποιήσει όλες τις διαθέσιμες"
-                            + " αναδιατάξεις γραμμών!");
-                    shuffleLineLeft.setFont(new Font("Verdana",Font.BOLD,14));
+                columnShuffle(a);
+                ColumnShuffler.updateCounter();
+                if(ColumnShuffler.returnCounter()>=3){
+                    shuffleColumn.setVisible(false);
+                    shuffleColumnLeft.setText("Έχεις χρησιμοποιήσει όλες τις διαθέσιμες"
+                            + " αναδιατάξεις στηλών!");
+                    shuffleColumnLeft.setFont(new Font("Verdana",Font.BOLD,14));
                 }
                 else
-                    shuffleLineLeft.setText(RowShuffler.returnCounter()+"/3");
+                    shuffleColumnLeft.setText(ColumnShuffler.returnCounter()+"/3");
             }
         });
     }
@@ -989,11 +991,13 @@ public final class Play extends JFrame{
                 Switcharoo(56,64,newNumbers);
                 break;
         }
+        ResetPanels();
     }
     
+    //Επιλογή αναδιάταξη στήλης
     protected static void columnShuffle(int column){
         int[] newNumbers = new int[8];
-        newNumbers = RowShuffler.rowShuffle(column);
+        newNumbers = ColumnShuffler.columnShuffle(column);
         switch (column) {
             case 0:
                 Switcharoo(0,newNumbers);
@@ -1020,8 +1024,10 @@ public final class Play extends JFrame{
                 Switcharoo(56,newNumbers);
                 break;
         }
+        ResetPanels();
     }
     
+    //Υλοποιεί την αντικατάσταση των λέξεων στα πάνελ --- για shuffle στήλης
     public static void Switcharoo(int start, int[] newNumbers){
         LetterPanel temp1;
         for(int i=start; i<(start+57); i+=8){
@@ -1040,7 +1046,7 @@ public final class Play extends JFrame{
         }
     }
     
-    //Υλοποιεί την αντικατάσταση των λέξεων στα πάνελ
+    //Υλοποιεί την αντικατάσταση των λέξεων στα πάνελ --- για shuffle γραμμής
     public static void Switcharoo(int min, int max,int[] newNumbers){
         LetterPanel temp1;
         for(int i=min; i<max; i++){

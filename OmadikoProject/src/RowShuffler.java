@@ -8,7 +8,7 @@ public class RowShuffler extends Shuffler{
     
     public static int[] rowShuffle(int row) {
         
-        Random rand = new Random();
+        
         int[] newNumbers = new int[8];
         for(int i=0; i<newNumbers.length; i++)
             newNumbers[i]=-1;
